@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTracker.Models;
+using BugTracker.Helpers;
+using System.Net;
 
 namespace BugTracker.Controllers
 {
@@ -17,6 +19,9 @@ namespace BugTracker.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
+        private UserRolesHelper rolesHelper = new UserRolesHelper();
+        private ProjectHelper projectHelper = new ProjectHelper();
 
         public AccountController()
         {
@@ -50,6 +55,16 @@ namespace BugTracker.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        //
+        // GET: /Account/Profile
+        [Authorize]
+        public ActionResult AccountProfile()
+        {
+            var userId = User.Identity.GetUserId();
+
+            return View(db.Users.Find(userId));
         }
 
         //
@@ -139,6 +154,7 @@ namespace BugTracker.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+
             return View();
         }
 
@@ -203,7 +219,7 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -211,10 +227,10 @@ namespace BugTracker.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form

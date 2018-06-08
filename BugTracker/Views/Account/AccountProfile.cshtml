@@ -1,0 +1,54 @@
+﻿@using BugTracker.Helpers;
+@model BugTracker.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "AccountProfile";
+}
+
+@{ var roleHelper = new UserRolesHelper();}
+@{ var projHelper = new ProjectHelper();}
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <img src="@Model.Picture" alt="Your Pretty Picture" class="center-block" />
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="col-md-3">
+            <div><p>First Name:</p></div>
+            <div><p>Last Name:</p></div>
+            <div><p>Display Name:</p></div>
+            <div><p>Email:</p></div>
+            <div><p>Phone Number:</p></div>
+            <div><p>Role:</p></div>
+        </div>
+        <div class="col-md-6">
+            <div> <p> @Html.DisplayFor(modelItem => Model.FirstName)</p></div>
+            <div><p> @Html.DisplayFor(modelItem => Model.LastName)</p></div>
+            <div><p> @Html.DisplayFor(modelItem => Model.DisplayName)</p></div>
+            <div><p> @Html.DisplayFor(modelItem => Model.Email)</p></div>
+            <div><p> @Html.DisplayFor(modelItem => Model.PhoneNumber)</p></div>
+            @{ var Role = roleHelper.ListUserRoles(Model.Id);}
+            @foreach (var roles in Role)
+            {
+                <div><p>@roles</p></div>
+            }
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<div class="row">
+    <div class="col-md-6 col-md-offset-4">
+        @Html.ActionLink("Change Password", "ChangePassword", "Manage", new { id = Model.Id }, null) |
+        @Html.ActionLink("Change Name", "NameChange", "Users", new { id = Model.Id }, null) |
+        @Html.ActionLink("Add/Change Picture", "PictureChange", "Users", new { id = Model.Id }, null)
+
+    </div>
+</div>
+
+
+

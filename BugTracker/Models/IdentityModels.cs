@@ -13,6 +13,7 @@ namespace BugTracker.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DisplayName { get; set; }
+        public string Picture { get; set; }
 
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
@@ -61,5 +62,6 @@ namespace BugTracker.Models
         public DbSet<TicketComment> TicketComments { get; set; }
         public DbSet<TicketHistory> TicketHistories { get; set; }
         public DbSet<TicketNotification> TicketNotifications { get; set; }
+
     }
 }

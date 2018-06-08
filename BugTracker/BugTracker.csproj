@@ -196,6 +196,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
@@ -207,15 +208,19 @@
     <Compile Include="Controllers\TicketsController.cs" />
     <Compile Include="Controllers\TicketStatusesController.cs" />
     <Compile Include="Controllers\TicketTypesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ProjectHelper.cs" />
+    <Compile Include="Helpers\UserRolesHelper.cs" />
     <Compile Include="Migrations\201806051611369_ticketfix.cs" />
     <Compile Include="Migrations\201806051611369_ticketfix.Designer.cs">
       <DependentUpon>201806051611369_ticketfix.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\EmailModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Project.cs" />
@@ -229,6 +234,7 @@
     <Compile Include="Models\TicketType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Views\ImageUploadValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -239,6 +245,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Background_Bug_Tracker.jpg" />
+    <Content Include="Images\ms-icon-310x310.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -941,6 +949,7 @@
     <Content Include="Template\sound\voice_off.mp3" />
     <Content Include="Template\sound\voice_on.mp3" />
     <Content Include="Template\xml\gmap\pins.xml" />
+    <Content Include="Content\LoginStyle.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1061,6 +1070,23 @@
     <Content Include="Template\sound\voice_alert.ogg" />
     <Content Include="Template\sound\voice_off.ogg" />
     <Content Include="Template\sound\voice_on.ogg" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\SubIndex.cshtml" />
+    <Content Include="Views\Admin\AssignPMs.cshtml" />
+    <Content Include="Views\Users\DevIndex.cshtml" />
+    <Content Include="Views\Users\AdminIndex.cshtml" />
+    <Content Include="Views\Users\PMIndex.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Projects\ClosedProjects.cshtml" />
+    <Content Include="Views\Projects\OpenProjects.cshtml" />
+    <Content Include="Private.config" />
+    <Content Include="Views\Account\AccountProfile.cshtml" />
+    <Content Include="Views\Users\NameChange.cshtml" />
+    <Content Include="Views\Users\PictureChange.cshtml" />
+    <Content Include="Views\Projects\AllProjects.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,77 @@
+﻿@using BugTracker.Helpers;
+@model IEnumerable<BugTracker.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "DevIndex";
+}
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@{
+    var roleHelper = new UserRolesHelper();
+}
+
+
+<h1>Developers</h1>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DisplayName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayName("Projects")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in roleHelper.UsersInRole("Developer"))
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @{
+                    var projHelper = new ProjectHelper();
+                    var projects = projHelper.ListUserProjects(item.Id);
+                }
+                @foreach (var project in projects)
+                {
+                    @project.Name<br />
+                }
+            </td>
+            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            }
+        </tr>
+    }
+</table>
+

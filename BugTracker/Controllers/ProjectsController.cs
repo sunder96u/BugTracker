@@ -13,13 +13,28 @@ namespace BugTracker.Controllers
     public class ProjectsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        [Authorize]
         // GET: Projects
         public ActionResult Index()
         {
             return View(db.Projects.ToList());
         }
 
+        public ActionResult OpenProjects()
+        {
+            return View(db.Projects.Where(s =>s.Status == "Open").ToList());
+        }
+
+        public ActionResult ClosedProjects()
+        {
+            return View(db.Projects.Where(s => s.Status == "Closed").ToList());
+        }
+
+        public ActionResult AllProjects()
+        {
+            return View(db.Projects.ToList());
+        }
+        [Authorize]
         // GET: Projects/Details/5
         public ActionResult Details(int? id)
         {
@@ -34,7 +49,7 @@ namespace BugTracker.Controllers
             }
             return View(project);
         }
-
+        [Authorize(Roles = ("Admin"))]
         // GET: Projects/Create
         public ActionResult Create()
         {
@@ -46,7 +61,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Project project)
+        public ActionResult Create([Bind(Include = "Id,Name,Status")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +72,7 @@ namespace BugTracker.Controllers
 
             return View(project);
         }
-
+        [Authorize(Roles = ("Admin,Project Manager"))]
         // GET: Projects/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -78,7 +93,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Project project)
+        public ActionResult Edit([Bind(Include = "Id,Name,Status")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -89,6 +104,7 @@ namespace BugTracker.Controllers
             return View(project);
         }
 
+        [Authorize(Roles =("Admin,Project Manager"))]
         // GET: Projects/Delete/5
         public ActionResult Delete(int? id)
         {
