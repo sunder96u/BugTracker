@@ -14,6 +14,7 @@ using BugTracker.Views;
 namespace BugTracker.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class UsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -83,7 +84,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,DisplayName,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser, HttpPostedFileBase image)
+        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,,Email,PhoneNumber")] ApplicationUser applicationUser, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
@@ -93,6 +94,7 @@ namespace BugTracker.Controllers
                     image.SaveAs(Path.Combine(Server.MapPath("~/Images/"), fileName));
                     applicationUser.Picture = "/Images/" + fileName;
                 }
+                
 
                 db.Users.Add(applicationUser);
                 db.SaveChanges();
@@ -133,7 +135,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,DisplayName,Email,PhoneNumber,Picture")] ApplicationUser applicationUser, HttpPostedFileBase image, string Roles, string Project)
+        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,Email,PhoneNumber,Picture,DisplayName")] ApplicationUser applicationUser, HttpPostedFileBase image, string Roles, List<int> Projects)
         {
             if (ModelState.IsValid)
             {
@@ -158,8 +160,8 @@ namespace BugTracker.Controllers
                 {
                     projectHelper.RemoveUserFromProject(applicationUser.Id, proj.Id);
                 }
-                if (Project != null)
-                    foreach (var projectId in Project)
+                if (Projects != null)
+                    foreach (var projectId in Projects)
                     projectHelper.AddUserToProject(applicationUser.Id, projectId);
 
                 //db.Entry(applicationUser).State = EntityState.Unchanged;
@@ -167,8 +169,8 @@ namespace BugTracker.Controllers
                 db.Entry(applicationUser).Property(p => p.FirstName).IsModified = true;
                 db.Entry(applicationUser).Property(p => p.LastName).IsModified = true;
                 db.Entry(applicationUser).Property(p => p.Email).IsModified = true;
-                db.Entry(applicationUser).Property(p => p.DisplayName).IsModified = true;
                 db.Entry(applicationUser).Property(p => p.PhoneNumber).IsModified = true;
+                db.Entry(applicationUser).Property(p => p.DisplayName).IsModified = true;
                 db.Entry(applicationUser).Property(p => p.UserName).IsModified = true;
                 db.Entry(applicationUser).Property(p => p.Picture).IsModified = true;
                 db.SaveChanges();
@@ -198,7 +200,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult NameChange([Bind(Include = "Id,FirstName,LastName,DisplayName")] ApplicationUser applicationUser)
+        public ActionResult NameChange([Bind(Include = "Id,FirstName,LastName")] ApplicationUser applicationUser)
         {
             if (ModelState.IsValid)
             {
@@ -208,7 +210,6 @@ namespace BugTracker.Controllers
                 db.Users.Attach(applicationUser);
                 db.Entry(applicationUser).Property(p => p.FirstName).IsModified = true;
                 db.Entry(applicationUser).Property(p => p.LastName).IsModified = true;
-                db.Entry(applicationUser).Property(p => p.DisplayName).IsModified = true;
                 db.Entry(applicationUser).Property(p => p.UserName).IsModified = false;
 
 

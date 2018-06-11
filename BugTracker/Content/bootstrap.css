@@ -6567,6 +6567,9 @@ button.close {
 .visible-lg-inline-block {
   display: none !important;
 }
+.listbox{
+    width: 250px;
+}
 @media (max-width: 767px) {
   .visible-xs {
     display: block !important;

@@ -7,10 +7,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -18,8 +20,32 @@ namespace BugTracker.Controllers
         // GET: Tickets
         public ActionResult Index()
         {
-            var tickets = db.Tickets.Include(t => t.AssignedToUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            return View(tickets.ToList());
+            {
+                var myTickets = new List<Ticket>();
+                var userId = User.Identity.GetUserId();
+
+                if (User.IsInRole("Admin"))
+                {
+                    myTickets = db.Tickets.ToList();
+                }
+
+                if (User.IsInRole("Developer"))
+                {
+                    myTickets = db.Tickets.Where(p => p.AssignedToUserId == userId).ToList();
+                }
+
+                if (User.IsInRole("Submitter"))
+                {
+                    myTickets = db.Tickets.Where(p => p.AssignedToUserId == userId).ToList();
+                }
+
+                if (User.IsInRole("Project Manager"))
+                {
+                    myTickets = db.Tickets.Where(p => p.AssignedToUserId == userId).ToList();
+                }
+
+                return View(myTickets);
+            }
         }
 
         // GET: Tickets/Details/5

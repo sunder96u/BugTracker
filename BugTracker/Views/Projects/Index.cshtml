@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Index";
 }
-
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
 <h2>Index</h2>
 
 <p>
@@ -32,8 +32,8 @@
         @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
         {
             <td>
-                @Html.ActionLink("Assign Users", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.ActionLink("Assign Users", "Edit", new { id = item.Id })
+
             </td>
         }
     </tr>

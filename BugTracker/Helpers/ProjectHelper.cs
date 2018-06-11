@@ -54,7 +54,7 @@ namespace BugTracker.Helpers
             }
         }
 
-        internal IEnumerable<object> ListUserRoles(string pMs)
+        internal IEnumerable<object> ListUserRoles(string PMs)
         {
             throw new NotImplementedException();
         }

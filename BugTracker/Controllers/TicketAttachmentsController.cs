@@ -11,6 +11,7 @@ using BugTracker.Models;
 namespace BugTracker.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class TicketAttachmentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

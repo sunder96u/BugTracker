@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Delete";
 }
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
 
 <h2>Delete</h2>
 
@@ -125,7 +126,8 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">

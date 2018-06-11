@@ -11,6 +11,7 @@ namespace BugTracker.Models
         public string Name { get; set; }
         public string Status { get; set; }
 
+
         //Navigational Properties
 
         public virtual ICollection<Ticket> Tickets { get; set; }
@@ -23,6 +24,7 @@ namespace BugTracker.Models
             Tickets = new HashSet<Ticket>();
             Users = new HashSet<ApplicationUser>();
         }
+
 
     }
 }

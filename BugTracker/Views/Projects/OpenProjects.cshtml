@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "OpenProjects";
 }
-
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
 <h2>Open Projects</h2>
 
 <table class="table">
@@ -21,10 +21,10 @@
         </td>
         @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
         {
-            <td>
-                @Html.ActionLink("Assign Users", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
+        <td>
+            @Html.ActionLink("Assign Users", "AssignUser", "Projects", new { id = item.Id }) |
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+        </td>
         }
     </tr>
 }
