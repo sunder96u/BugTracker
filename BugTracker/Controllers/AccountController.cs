@@ -269,12 +269,12 @@ namespace BugTracker.Controllers
             if (user == null)
             {
                 // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                return RedirectToAction("AccountProfile", "Account");
             }
             var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
             if (result.Succeeded)
             {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                return RedirectToAction("AccountProfile", "Account");
             }
             AddErrors(result);
             return View();

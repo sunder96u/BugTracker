@@ -13,6 +13,7 @@ namespace BugTracker.Helpers
     public class ProjectHelper
     {
         ApplicationDbContext db = new ApplicationDbContext();
+        private UserRolesHelper rolesHelper = new UserRolesHelper();
 
         public bool IsUserOnProject(string userId, int projectId)
         {
@@ -21,7 +22,7 @@ namespace BugTracker.Helpers
             return (flag);
         }
 
-        public ICollection<Project>ListUserProjects(string userId)
+        public ICollection<Project> ListUserProjects(string userId)
         {
             ApplicationUser user = db.Users.Find(userId);
 
@@ -29,9 +30,10 @@ namespace BugTracker.Helpers
             return (projects);
         }
 
+
         public void AddUserToProject(string userId, int projectId)
         {
-            if(!IsUserOnProject(userId, projectId))
+            if (!IsUserOnProject(userId, projectId))
             {
                 Project proj = db.Projects.Find(projectId);
                 var newUser = db.Users.Find(userId);
@@ -43,7 +45,7 @@ namespace BugTracker.Helpers
 
         public void RemoveUserFromProject(string userId, int projectId)
         {
-            if(IsUserOnProject(userId, projectId))
+            if (IsUserOnProject(userId, projectId))
             {
                 Project proj = db.Projects.Find(projectId);
                 var delUser = db.Users.Find(userId);

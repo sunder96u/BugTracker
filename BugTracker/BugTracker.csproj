@@ -197,9 +197,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AllowedFileTypesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\ProjectStatsesController.cs" />
     <Compile Include="Controllers\TicketAttachmentsController.cs" />
     <Compile Include="Controllers\TicketCommentsController.cs" />
     <Compile Include="Controllers\TicketHistoriesController.cs" />
@@ -213,17 +215,21 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ProjectHelper.cs" />
+    <Compile Include="Helpers\TicketHelper.cs" />
     <Compile Include="Helpers\UserRolesHelper.cs" />
+    <Compile Include="Helpers\FileUploadValidator.cs" />
     <Compile Include="Migrations\201806051611369_ticketfix.cs" />
     <Compile Include="Migrations\201806051611369_ticketfix.Designer.cs">
       <DependentUpon>201806051611369_ticketfix.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AllowedFileType.cs" />
     <Compile Include="Models\EmailModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\ProjectStats.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketAttachment.cs" />
     <Compile Include="Models\TicketComment.cs" />
@@ -234,24 +240,32 @@
     <Compile Include="Models\TicketType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ImageUploadValidator.cs" />
+    <Compile Include="Helpers\ImageUploadValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Buttonfaker.css" />
+    <Content Include="Content\HeightLimit.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\jpg.png" />
     <Content Include="Images\Background_Bug_Tracker.jpg" />
     <Content Include="Images\ms-icon-310x310.png" />
+    <Content Include="Images\Pdf.png" />
+    <Content Include="Images\png.jpg" />
+    <Content Include="Images\txt-512.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\.docx" />
+    <Content Include="Images\.xls" />
     <None Include="Properties\PublishProfiles\SunderwoodBugTracker - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -1081,8 +1095,7 @@
     <Content Include="Views\Users\AdminIndex.cshtml" />
     <Content Include="Views\Users\PMIndex.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Projects\ClosedProjects.cshtml" />
-    <Content Include="Views\Projects\OpenProjects.cshtml" />
+    <Content Include="Views\Projects\MyProjects.cshtml" />
     <Content Include="Private.config" />
     <Content Include="Views\Account\AccountProfile.cshtml" />
     <Content Include="Views\Users\NameChange.cshtml" />
@@ -1090,9 +1103,22 @@
     <Content Include="Views\Projects\AllProjects.cshtml" />
     <Content Include="Views\Admin\AssignUsers.cshtml" />
     <Content Include="Views\Projects\AssignUser.cshtml" />
+    <Content Include="Views\Projects\MyTickets.cshtml" />
+    <Content Include="Views\Projects\MyProjectTickets.cshtml" />
+    <Content Include="Views\AllowedFileTypes\Create.cshtml" />
+    <Content Include="Views\AllowedFileTypes\Delete.cshtml" />
+    <Content Include="Views\AllowedFileTypes\Details.cshtml" />
+    <Content Include="Views\AllowedFileTypes\Edit.cshtml" />
+    <Content Include="Views\AllowedFileTypes\Index.cshtml" />
+    <Content Include="Views\ProjectStatses\Create.cshtml" />
+    <Content Include="Views\ProjectStatses\Delete.cshtml" />
+    <Content Include="Views\ProjectStatses\Details.cshtml" />
+    <Content Include="Views\ProjectStatses\Edit.cshtml" />
+    <Content Include="Views\ProjectStatses\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="FilesUploaded\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
+using BugTracker.Views;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -41,8 +44,8 @@ namespace BugTracker.Controllers
         // GET: TicketAttachments/Create
         public ActionResult Create()
         {
-            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
-            ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName");
+            //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
+            //ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName");
             return View();
         }
 
@@ -51,17 +54,29 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TicketId,FilePath,Description,Created,Updated,UserId")] TicketAttachment ticketAttachment)
+        public ActionResult Create([Bind(Include = "Id,TicketId,FilePath,Description,Created,UserId")] TicketAttachment ticketAttachment, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
+
+                if (FileUploadValidator.IsWebFriendlyFile(image))
+                {
+                    var fileName = Path.GetFileName(image.FileName);
+                    image.SaveAs(Path.Combine(Server.MapPath("~/FilesUploaded/"), fileName));
+                    ticketAttachment.FilePath = "/FilesUploaded/" + fileName;
+                }
+
+
+                ticketAttachment.Created = DateTimeOffset.Now;
+                ticketAttachment.UserId = User.Identity.GetUserId();
                 db.TicketAttachments.Add(ticketAttachment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                var id = db.Tickets.Find(ticketAttachment.TicketId).Id;
+                return RedirectToAction("Details", "Tickets", new { Id = id });
+               
             }
-
-            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketAttachment.TicketId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketAttachment.UserId);
+            //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketAttachment.TicketId);
+            //ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketAttachment.UserId);
             return View(ticketAttachment);
         }
 

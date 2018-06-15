@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -41,8 +42,8 @@ namespace BugTracker.Controllers
         // GET: TicketComments/Create
         public ActionResult Create()
         {
-            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
-            ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName");
+            //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
+            //ViewBag.UserId = new SelectList(db.Users, "Id", "UserName");
             return View();
         }
 
@@ -51,17 +52,20 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CommentBody,Created,Updated,TicketId,UserId")] TicketComment ticketComment)
+        public ActionResult Create([Bind(Include = "Id,CommentBody,Created,TicketId,UserId")] TicketComment ticketComment)
         {
             if (ModelState.IsValid)
             {
+                ticketComment.Created = DateTimeOffset.Now;
+                ticketComment.UserId = User.Identity.GetUserId();
                 db.TicketComments.Add(ticketComment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                var id = db.Tickets.Find(ticketComment.TicketId).Id;
+                return RedirectToAction("Details", "Tickets", new { Id = id });
             }
 
-            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketComment.TicketId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketComment.UserId);
+            //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketComment.TicketId);
+            //ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketComment.UserId);
             return View(ticketComment);
         }
 

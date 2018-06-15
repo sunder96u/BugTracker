@@ -78,9 +78,16 @@ namespace BugTracker.Migrations
                     new TicketPriority { Name = "Ignore" }
                 );
 
+            context.TicketTypes.AddOrUpdate(
+                t => t.Name,
+                    new TicketType { Name = "Bug" },
+                    new TicketType { Name = "Crash" },
+                    new TicketType { Name = "Update" }
+                );
+
             context.TicketStatus.AddOrUpdate(
                 t => t.Name,
-                    new TicketStatus { Name = "UnAssigned" },
+                    new TicketStatus { Name = "Unassigned" },
                     new TicketStatus { Name = "Not in Progress" },
                     new TicketStatus { Name = "In Progress" },
                     new TicketStatus { Name = "On Hold" },
@@ -88,6 +95,27 @@ namespace BugTracker.Migrations
                     new TicketStatus { Name = "Closed" }
                 );
 
+            context.ProjectStatuses.AddOrUpdate(
+                p => p.Name,
+                   new ProjectStats { Name = "Open" },
+                   new ProjectStats { Name = "Closed" },
+                   new ProjectStats { Name = "On Hold" }
+                );
+
+            context.AllowedFileTypes.AddOrUpdate(
+                 t => t.Type,
+                    new AllowedFileType { Type = "txt" },
+                    new AllowedFileType { Type = "png" },
+                    new AllowedFileType { Type = "PNG" },
+                    new AllowedFileType { Type = "doc" },
+                    new AllowedFileType { Type = "docx" },
+                    new AllowedFileType { Type = "jpeg" },
+                    new AllowedFileType { Type = "jpg" },
+                    new AllowedFileType { Type = "xls" },
+                    new AllowedFileType { Type = "xlsx" },
+                    new AllowedFileType { Type = "gif" },
+                    new AllowedFileType { Type = "tiff" }
+                );
 
         }
     }

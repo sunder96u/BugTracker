@@ -3,8 +3,6 @@
 @{
     ViewBag.Title = "Index";
 }
-<link href="~/Content/bootstrap.css" rel="stylesheet" />
-<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -22,21 +20,21 @@
 
     @foreach (var item in Model)
     {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-        {
+        <tr>
             <td>
-                @Html.ActionLink("Assign Users", "Edit", new { id = item.Id })
-
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
-        }
-    </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+            {
+                <td>
+                    @Html.ActionLink("Assign Users", "Edit", new { id = item.Id })
+
+                </td>
+            }
+        </tr>
     }
 
 </table>

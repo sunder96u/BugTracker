@@ -1,0 +1,12 @@
+﻿body {
+}
+
+#Attachment{
+    max-height: 500px;
+    overflow:auto;
+}
+
+#Comment {
+    max-height: 500px;
+    overflow: auto;
+}

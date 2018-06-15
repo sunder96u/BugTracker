@@ -29,7 +29,6 @@ namespace BugTracker.Controllers
             return View(db.Users.ToList());
         }
         // GET: Users
-        [Authorize(Roles = "Admin")]
         public ActionResult AdminIndex()
         {
 

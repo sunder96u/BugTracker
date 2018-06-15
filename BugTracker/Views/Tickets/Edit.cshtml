@@ -4,111 +4,131 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
-
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Ticket</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(Model => Model.Id)
+    @Html.HiddenFor(Model => Model.Created)
+    @Html.HiddenFor(Model => Model.OwnerUserId)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <section id="widget-grid" class="">
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-            </div>
+        <!-- row -->
+        <div class="row">
+
+            <!-- NEW WIDGET START -->
+            <article class="col-sm-12 col-md-12 col-lg-12">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                    <!-- widget options:
+                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                    data-widget-colorbutton="false"
+                    data-widget-editbutton="false"
+                    data-widget-togglebutton="false"
+                    data-widget-deletebutton="false"
+                    data-widget-fullscreenbutton="false"
+                    data-widget-custombutton="false"
+                    data-widget-collapsed="true"
+                    data-widget-sortable="false"
+
+                    -->
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list-alt"></i> </span>
+                        <h2></h2>
+
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+
+                            <form class="form-horizontal">
+
+                                <fieldset>
+                                    <legend>Edit A Ticket</legend>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Ticket Title</label>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Ticket Description</label>
+                                        <div class="col-md-10">
+                                            @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" }, rows = "4" })
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Project Name</label>
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("ProjectId", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Ticket Type</label>
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("TicketTypeId", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.TicketTypeId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Ticket Priority</label>
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("TicketPriorityId", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.TicketPriorityId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                </fieldset>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-default" type="button" onclick="window.history.back();">
+                                                Back
+                                            </button>
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fa fa-save"></i>
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+            </article>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    </section>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Created, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Created, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Updated, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Updated, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Updated, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProjectId, "ProjectId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ProjectId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TicketTypeId, "TicketTypeId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("TicketTypeId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TicketTypeId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TicketPriorityId, "TicketPriorityId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("TicketPriorityId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TicketPriorityId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TicketStatusId, "TicketStatusId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("TicketStatusId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TicketStatusId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.OwnerUserId, "OwnerUserId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("OwnerUserId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.OwnerUserId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AssignedToUserId, "AssignedToUserId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("AssignedToUserId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AssignedToUserId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    }

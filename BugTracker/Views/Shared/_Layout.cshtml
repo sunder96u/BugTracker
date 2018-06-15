@@ -26,6 +26,9 @@
     <!-- SmartAdmin RTL Support  -->
     <link rel="stylesheet" type="text/css" media="screen" href="~/Template/css/smartadmin-rtl.min.css">
 
+    <!-- Datatable support-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css" />
+
     <!-- We recommend you use "your_style.css" to override SmartAdmin
          specific styles this will also ensure you retrain your customization with each SmartAdmin update.
     <link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
@@ -153,7 +156,7 @@ Use search to find needed section.
 
             <!-- #MOBILE -->
             <!-- Top menu profile link : this shows only when top menu is active -->
-            <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
+            @*<ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
                 <li class="">
                     <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
                         <img src="~/Template/img/avatars/sunny.png" alt="John Doe" class="online" />
@@ -180,7 +183,7 @@ Use search to find needed section.
                         </li>
                     </ul>
                 </li>
-            </ul>
+            </ul>*@
 
             <!-- logout button -->
             <div id="logout" class="btn-header transparent pull-right">
@@ -194,7 +197,7 @@ Use search to find needed section.
             </div>
             <!-- end search mobile button -->
             <!-- input: search field -->
-            <form action="search.html" class="header-search pull-right">
+            @*<form action="search.html" class="header-search pull-right">
                 <input id="search-fld" type="text" name="param" placeholder="Find reports and more" data-autocomplete='[
 					"ActionScript",
 					"AppleScript",
@@ -222,7 +225,7 @@ Use search to find needed section.
                     <i class="fa fa-search"></i>
                 </button>
                 <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
-            </form>
+            </form>*@
             <!-- end input: search field -->
             <!-- fullscreen button -->
             <div id="fullscreen" class="btn-header transparent pull-right">
@@ -258,7 +261,7 @@ Use search to find needed section.
     <!-- Note: This width of the aside area can be adjusted through LESS variables -->
     <aside id="left-panel">
 
-        @{ 
+        @{
             var db = new ApplicationDbContext();
             ApplicationUser user = null;
             if (User.Identity.IsAuthenticated)
@@ -266,18 +269,18 @@ Use search to find needed section.
                 user = db.Users.Find(User.Identity.GetUserId());
             }
         }
-        
+
         <!-- User info -->
         <div class="login-info">
             <span>
                 <!-- User image size is adjusted inside CSS, it should stay as it -->
-                    <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                        <img src=@user.Picture alt="me" class="online" />
-                        <span>
-                            @user.FirstName
-                        </span>
-                        <i class="fa fa-angle-down"></i>
-                    </a>
+                <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+                    <img src=@user.Picture alt="me" class="online" />
+                    <span>
+                        @user.FirstName
+                    </span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
             </span>
         </div>
         <!-- end user info -->
@@ -298,20 +301,34 @@ Use search to find needed section.
         </li>*@
                 @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
                 {
-                <li class="active no-menu">
-                    @* This is for the Projects Folders that the users will be able to look at,  This will need to be an active list, not static like I currently have it.  This will allow it to be modified by the database for when more projects or tickets are added *@
-                    <a href="~/Projects/Create"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">Create Projects</span></a>
-                </li>
+                    <li class="active">
+                        @* This is for the Projects Folders that the users will be able to look at,  This will need to be an active list, not static like I currently have it.  This will allow it to be modified by the database for when more projects or tickets are added *@
+                        <a href="~/Projects/Create"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">Create Project</span></a>
+                    </li>
                 }
-                <li class="active no-menu">
-                    @* This is for the Projects Folders that the users will be able to look at,  This will need to be an active list, not static like I currently have it.  This will allow it to be modified by the database for when more projects or tickets are added *@
-                    <a href="~/Projects/OpenProjects"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">Open Projects</span></a>
-                </li>
+                @if (User.IsInRole("Submitter"))
+                {
+                    <li class="active">
+                        <a href="~/Tickets/Create"><i class="fa fa-lg fa-fw fa-ticket"></i><span class="menu-item-parent">Create Ticket</span></a>
+                    </li>
+                }
+
                 <li class="active">
                     @* This is for the Projects Folders that the users will be able to look at,  This will need to be an active list, not static like I currently have it.  This will allow it to be modified by the database for when more projects or tickets are added *@
-                    <a href="~/Projects/ClosedProjects"><i class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">Closed Projects</span></a>
+                    <a><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">Projects</span></a>
+                    <ul>
+                        <li><a href="~/Projects/MyProjects"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">My Projects</span></a></li>
+                        <li><a href="~/Projects/AllProjects"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">All Projects</span></a></li>
+                    </ul>
                 </li>
                 <li class="active">
+                    <a><i class="fa fa-lg fa-fw fa-ticket"></i><span class="menu-item-parent">Tickets</span></a>
+                    <ul>
+                        <li><a href="~/Projects/MyTickets"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">My Tickets</span></a></li>
+                        <li><a href="~/Projects/MyProjectTickets"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">My Project Tickets</span></a></li>
+                        <li><a href="~/Tickets/Index"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">All Tickets</span></a></li>
+                    </ul>
+                <li class="active ">
                     <a><i class="fa fa-lg fa-fw fa-user"></i> <span class="menu-item-parent">Users</span></a>
                     <ul>
                         <li><a href="~/Users/AdminIndex"><i class="fa fa-lg fa-fw fa-user"></i> <span class="menu-item-parent">Administrators</span></a></li>
@@ -324,19 +341,22 @@ Use search to find needed section.
                         }
                     </ul>
                 </li>
-                <li class="active">
-                    <a href="~/Admin/AssignPMs"><i class="fa fa-lg fa-fw fa-user"></i> <span class="menu-item-parent">Assign PM's</span></a>
-                </li>
-                @*<li class="chat-users top-menu-invisible">
-            <a href="#"><i class="fa fa-lg fa-fw fa-comment-o"><em class="bg-color-pink flash animated">!</em></i> <span class="menu-item-parent">Chat</span></a>
-            <ul>
-                <li>
-                    <!-- DISPLAY USERS -->
-                    <!-- END DISPLAY USERS -->
-                </li>
-            </ul>
-        </li>*@
-            </ul>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="active">
+                        <a href="~/Admin/AssignPMs"><i class="fa fa-lg fa-fw fa-user"></i> <span class="menu-item-parent">Assign PM's</span></a>
+                    </li>
+                }
+                    @*<li class="chat-users top-menu-invisible">
+                <a href="#"><i class="fa fa-lg fa-fw fa-comment-o"><em class="bg-color-pink flash animated">!</em></i> <span class="menu-item-parent">Chat</span></a>
+                <ul>
+                    <li>
+                        <!-- DISPLAY USERS -->
+                        <!-- END DISPLAY USERS -->
+                    </li>
+                </ul>
+            </li>*@
+                </ul>
         </nav>
 
 
@@ -409,13 +429,13 @@ Use search to find needed section.
                 <a href="calendar.html" class="jarvismetro-tile big-cubes bg-color-orangeDark"> <span class="iconbox"> <i class="fa fa-calendar fa-4x"></i> <span>Calendar</span> </span> </a>
             </li>
             <li>
-                <a href="~/Projects/OpenProjects" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i class="fa fa-book fa-4x"></i> <span>Projects <span class="label pull-right bg-color-darken">6</span></span> </span> </a>
+                <a href="~/Projects/MyProjects" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i class="fa fa-book fa-4x"></i> <span>Projects <span class="label pull-right bg-color-darken">6</span></span> </span> </a>
             </li>
             @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-            { 
-            <li>
-                <a href="~/Projects/AllProjects" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i class="fa fa-book fa-4x"></i> <span>All Projects </span> </span> </a>
-            </li>
+            {
+                <li>
+                    <a href="~/Projects/AllProjects" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i class="fa fa-book fa-4x"></i> <span>All Projects </span> </span> </a>
+                </li>
             }
             <li>
                 <a href="~/Account/AccountProfile" class="jarvismetro-tile big-cubes bg-color-pinkDark"> <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
@@ -1088,6 +1108,8 @@ Use search to find needed section.
         })();
 
     </script>
+
+
     @RenderSection("Scripts", required: false)
 </body>
 

@@ -19,6 +19,7 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private UserRolesHelper rolesHelper = new UserRolesHelper();
         private ProjectHelper projectHelper = new ProjectHelper();
+        private TicketHelper ticketHelper = new TicketHelper();
 
         // GET: Projects
         public ActionResult Index()
@@ -27,82 +28,18 @@ namespace BugTracker.Controllers
         }
 
         //Get:
-        public ActionResult OpenProjects()
+        public ActionResult MyProjects()
         {
             var userId = User.Identity.GetUserId();
-            var myProjectsIds = new List<int>();
             var myProjects = projectHelper.ListUserProjects(userId);
 
             if (User.IsInRole("Admin"))
             {
                 myProjects = db.Projects.ToList();
             }
-            if (User.IsInRole("Project Manager"))
-            {
-                foreach (var project in myProjects)
-                {
-                    var projId = project.Id;
-                    myProjects = db.Projects.Where(p => p.Id == projId).ToList();
-                }
-            }
-            if (User.IsInRole("Developer"))
-            {
-                foreach (var project in myProjects)
-                {
-                    var projId = project.Id;
-                    myProjects = db.Projects.Where(p => p.Id == projId).ToList();
-                }
-            }
-            if (User.IsInRole("Submitter"))
-            {
-                foreach (var project in myProjects)
-                {
-                    var projId = project.Id;
-                    myProjects = db.Projects.Where(p => p.Id == projId).ToList();
-                }
-            }
 
+            return View(myProjects);
 
-            return View(myProjects.Where(s => s.Status == "Open"));
-        }
-
-        //Get:
-        public ActionResult ClosedProjects()
-        {
-            var userId = User.Identity.GetUserId();
-            var myProjectsIds = new List<int>();
-            var myProjects = projectHelper.ListUserProjects(userId);
-
-            if (User.IsInRole("Admin"))
-            {
-                myProjects = db.Projects.ToList();
-            }
-            if (User.IsInRole("Project Manager"))
-            {
-                foreach (var project in myProjects)
-                {
-                    var projId = project.Id;
-                    myProjects = db.Projects.Where(p => p.Id == projId).ToList();
-                }
-            }
-            if (User.IsInRole("Developer"))
-            {
-                foreach (var project in myProjects)
-                {
-                    var projId = project.Id;
-                    myProjects = db.Projects.Where(p => p.Id == projId).ToList();
-                }
-            }
-            if (User.IsInRole("Submitter"))
-            {
-                foreach (var project in myProjects)
-                {
-                    var projId = project.Id;
-                    myProjects = db.Projects.Where(p => p.Id == projId).ToList();
-                }
-            }
-
-            return View(myProjects.Where(s => s.Status == "Closed").ToList());
         }
 
         //Get:
@@ -111,9 +48,41 @@ namespace BugTracker.Controllers
             return View(db.Projects.ToList());
         }
 
+        // GET: MyTickets
+        public ActionResult MyTickets()
+        {
+            {
+                var userId = User.Identity.GetUserId();
+                var myProject = projectHelper.ListUserProjects(userId);
+                var myTickets = ticketHelper.GetProjectTickets(userId).ToList();
+
+                if (User.IsInRole("Admin"))
+                {
+                    myProject = db.Projects.ToList();
+                }
+
+                return View(myProject);
+            }
+        }
+
+        // GET: MyProjectTickets
+        public ActionResult MyProjectTickets()
+        {
+            {
+                var userId = User.Identity.GetUserId();
+                var myProject = projectHelper.ListUserProjects(userId);
+
+                if (User.IsInRole("Admin"))
+                {
+                    myProject = db.Projects.ToList();
+                }
+
+                return View(myProject);
+            }
+        }
 
         //Get:
-        public ActionResult AssignUser(int? id)
+        public ActionResult AssignUser(int id)
         {
             Project project = db.Projects.Find(id);
             if (project == null)
@@ -121,15 +90,27 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
             // 1. Setup a MultiSelectList to display all the Projects in our system
-            ViewBag.Projects = new MultiSelectList(db.Projects, "Id", "Name");
+            var UsersOnProject = projectHelper.UsersOnProject(id);
+            var projDevs = new List<string>();
+            var projSubs = new List<string>();
 
-            // 2. Set up a Select List to display all the users in the system
-            var ProjectManagers = rolesHelper.UsersInRole("Project Manager");
-            ViewBag.PMs = new MultiSelectList(ProjectManagers, "Id", "DisplayName");
+            foreach (var devUser in UsersOnProject)
+            {
+                if (rolesHelper.IsUserInRole(devUser.Id, "Developer"))
+                    projDevs.Add(devUser.Id);
+            }
+            foreach (var subUser in UsersOnProject)
+            {
+                if (rolesHelper.IsUserInRole(subUser.Id, "Developer"))
+                    projDevs.Add(subUser.Id);
+            }
+
             var Developer = rolesHelper.UsersInRole("Developer");
-            ViewBag.Devs = new MultiSelectList(Developer, "Id", "DisplayName");
+            ViewBag.Devs = new MultiSelectList(Developer, "Id", "DisplayName", projDevs);
+
+
             var Submitter = rolesHelper.UsersInRole("Submitter");
-            ViewBag.Subs = new MultiSelectList(Submitter, "Id", "DisplayName");
+            ViewBag.Subs = new MultiSelectList(Submitter, "Id", "DisplayName", projSubs);
 
 
             return View(project);
@@ -138,26 +119,29 @@ namespace BugTracker.Controllers
         //Post:
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AssignUser([Bind(Include = "Id,Name")] List<int> Projects, string Devs, string Subs)
+        public ActionResult AssignUser([Bind(Include = "Id,Name")] Project project, /*List<int> Projects,*/ List<string> Devs, List<string> Subs)
         {
             if (ModelState.IsValid)
             {
                 //Assign the user to the selected role
                 //Determine if the user currently occupies a project, and if so remove them from it
+                var UsersOnProject = projectHelper.UsersOnProject(project.Id).ToList();
 
-                foreach (var project in projectHelper.ListUserProjects(Devs))
+                foreach (var user in UsersOnProject)
                 {
-                    projectHelper.RemoveUserFromProject(Devs, project.Id);
-                }
-                foreach (var project in projectHelper.ListUserProjects(Subs))
-                {
-                    projectHelper.RemoveUserFromProject(Subs, project.Id);
+                    if(!rolesHelper.IsUserInRole(user.Id,"Project Manager"))
+                    projectHelper.RemoveUserFromProject(user.Id, project.Id);
                 }
 
-                foreach (var projectId in Projects)
-                    projectHelper.AddUserToProject(Devs, projectId);
-                foreach (var projectId in Projects)
-                    projectHelper.AddUserToProject(Subs, projectId);
+                foreach (var devId in Devs)
+                {
+                    projectHelper.AddUserToProject(devId, project.Id);
+                }
+
+                foreach (var subId in Subs)
+                {
+                    projectHelper.AddUserToProject(subId, project.Id);
+                }
 
                 return RedirectToAction("Index", "Home");
             }
@@ -179,29 +163,33 @@ namespace BugTracker.Controllers
             }
             return View(project);
         }
-        [Authorize(Roles = ("Admin"))]
+        [Authorize(Roles = ("Admin,Project Manager"))]
         // GET: Projects/Create
         public ActionResult Create()
         {
+            ViewBag.Status = new SelectList(db.ProjectStatuses, "Id", "Name");
             return View();
         }
+
 
         // POST: Projects/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Status")] Project project)
+        public ActionResult Create([Bind(Include = "Id,Name")] Project project)
         {
             if (ModelState.IsValid)
             {
                 db.Projects.Add(project);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
+
 
             return View(project);
         }
+
         [Authorize(Roles = ("Admin,Project Manager"))]
         // GET: Projects/Edit/5
         public ActionResult Edit(int? id)
@@ -215,6 +203,11 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
+
+            // create a list option that will only show Open or Closed
+
+            ViewBag.Status = new SelectList(db.ProjectStatuses, "Id", "Name");
+
             return View(project);
         }
 
@@ -223,15 +216,16 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Status")] Project project)
+        public ActionResult Edit([Bind(Include = "Id,Name")] Project project)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             return View(project);
+
         }
 
         [Authorize(Roles = ("Admin,Project Manager"))]
@@ -258,7 +252,7 @@ namespace BugTracker.Controllers
             Project project = db.Projects.Find(id);
             db.Projects.Remove(project);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         protected override void Dispose(bool disposing)

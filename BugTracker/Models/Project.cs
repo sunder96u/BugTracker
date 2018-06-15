@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -8,8 +9,9 @@ namespace BugTracker.Models
     public class Project
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Status { get; set; }
+        [Required]
+        public string Name { get; set; }       
+        public string ProjectStatusId { get; set; }
 
 
         //Navigational Properties
@@ -25,6 +27,6 @@ namespace BugTracker.Models
             Users = new HashSet<ApplicationUser>();
         }
 
-
+        public virtual ProjectStats ProjectStats { get; set; }
     }
 }
