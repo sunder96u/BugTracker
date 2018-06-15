@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<BugTracker.Models.Project>
+@using BugTracker.Helpers;
 
 @{
     ViewBag.Title = "Index";
 }
+@{var roleHelper = new UserRolesHelper(); }
 
 <section id="widget-grid" class="">
     <div class="row">
@@ -33,7 +35,7 @@
                             {
                                 <tbody>
                                     <tr>
-                                        
+
                                         <td class="tablelink">
                                             <a> @Html.ActionLink(item.Name, "Details", "Projects", new { id = item.Id }, new { Style = "color:Black;" })</a>
                                         </td>

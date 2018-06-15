@@ -75,7 +75,7 @@
                                                     @Html.DisplayFor(modelItem => item.Created)
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(modelItem => item.AssignedToUser.UserName)
+                                                    @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)
@@ -83,9 +83,9 @@
                                                 <td>
                                                     @Html.ActionLink("Edit", "Edit", "Tickets", new { id = item.Id }, null) |
                                                     @Html.ActionLink("Details", "Details", "Tickets", new { id = item.Id }, null)
-                                                    @if (User.IsInRole("Project Manager"))
+                                                    @if (User.IsInRole("Project Manager") || User.IsInRole("Admin"))
                                                     {
-                                                        @Html.ActionLink("Add Developer", "AddDev", "Tickets", new { id = item.Id }, null)
+                                                        @Html.ActionLink("Add Developer", "AssignDev", "Tickets", new { id = item.Id }, null)
                                                     }
                                                 </td>
                                             </tr>

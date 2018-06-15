@@ -119,7 +119,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -137,6 +137,57 @@ namespace BugTracker.Controllers
             return View(ticket);
         }
 
+        // GET: Tickets/Edit/5
+        public ActionResult AssignDev(int id)
+        {
+            var UsersOnProject = projectHelper.UsersOnProject(id);
+            var projDevs = new List<string>();
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Ticket ticket = db.Tickets.Find(id);
+            if (ticket == null)
+            {
+                return HttpNotFound();
+            }
+            foreach (var devUser in UsersOnProject)
+            {
+                if (rolesHelper.IsUserInRole(devUser.Id, "Developer"))
+                    projDevs.Add(devUser.Id);
+            }
+
+            var Developer = rolesHelper.UsersInRole("Developer");
+            ViewBag.Devs = new SelectList(Developer, "Id", "DisplayName", projDevs);
+            return View(ticket);
+        }
+
+        // POST: Tickets/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignDev([Bind(Include = "Id,Title,Description")] Ticket ticket, string Devs)
+        {
+            if (ModelState.IsValid)
+            {
+                ticket.Title = "foo";
+                ticket.Description = "foo";
+                ticket.AssignedToUserId = Devs;
+                ticket.Updated = DateTimeOffset.Now;
+                db.Tickets.Attach(ticket);
+                db.Entry(ticket).Property(a => a.AssignedToUserId).IsModified = true;
+                db.Entry(ticket).Property(a => a.Title).IsModified = false;
+                db.Entry(ticket).Property(a => a.Description).IsModified = false;
+
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "DisplayName", ticket.AssignedToUserId);
+
+            return View(ticket);
+        }
         // GET: Tickets/Delete/5
         public ActionResult Delete(int? id)
         {

@@ -1115,6 +1115,7 @@
     <Content Include="Views\ProjectStatses\Details.cshtml" />
     <Content Include="Views\ProjectStatses\Edit.cshtml" />
     <Content Include="Views\ProjectStatses\Index.cshtml" />
+    <Content Include="Views\Tickets\AssignDev.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -101,7 +101,7 @@ namespace BugTracker.Controllers
             }
             foreach (var subUser in UsersOnProject)
             {
-                if (rolesHelper.IsUserInRole(subUser.Id, "Developer"))
+                if (rolesHelper.IsUserInRole(subUser.Id, "Submitter"))
                     projDevs.Add(subUser.Id);
             }
 
@@ -148,7 +148,7 @@ namespace BugTracker.Controllers
             return View();
         }
 
-        [Authorize(Roles = ("Admin"))]
+
         // GET: Projects/Details/5
         public ActionResult Details(int? id)
         {
