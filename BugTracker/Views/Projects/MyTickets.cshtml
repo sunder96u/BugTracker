@@ -82,10 +82,10 @@
                                                 </td>
                                                 <td>
                                                     @Html.ActionLink("Edit", "Edit", "Tickets", new { id = item.Id }, null) |
-                                                    @Html.ActionLink("Details", "Details", "Tickets", new { id = item.Id }, null)
+                                                    @Html.ActionLink("Details", "Details", "Tickets", new { id = item.Id }, null) 
                                                     @if (User.IsInRole("Project Manager") || User.IsInRole("Admin"))
                                                     {
-                                                        @Html.ActionLink("Add Developer", "AssignDev", "Tickets", new { id = item.Id }, null)
+                                                       @:| @Html.ActionLink("Add Developer", "AssignDev", "Tickets", new { id = item.Id }, null)
                                                     }
                                                 </td>
                                             </tr>

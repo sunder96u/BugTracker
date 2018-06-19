@@ -150,18 +150,46 @@ namespace BugTracker.Controllers
 
 
         // GET: Projects/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            var UsersOnProject = projectHelper.UsersOnProject(id);
+            var projDevs = new List<ApplicationUser>();
+            var projSubs = new List<ApplicationUser>();
+            var projPMs = new List<ApplicationUser>();
+
             Project project = db.Projects.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
             }
+            foreach (var PmUser in UsersOnProject)
+            {
+                if (rolesHelper.IsUserInRole(PmUser.Id, "Project Manager"))
+                    projPMs.Add(PmUser);
+            }
+            foreach (var devUser in UsersOnProject)
+            {
+                if (rolesHelper.IsUserInRole(devUser.Id, "Developer"))
+                    projDevs.Add(devUser);
+            }
+            foreach (var subUser in UsersOnProject)
+            {
+                if (rolesHelper.IsUserInRole(subUser.Id, "Submitter"))
+                    projSubs.Add(subUser);
+            }
+            var ProjectManager = projPMs.ToList();
+            ViewBag.Pms = new SelectList(ProjectManager, "Id", "DisplayName", projPMs);
+
+
+            var Developer = projDevs.ToList();
+            ViewBag.Devs = new SelectList(Developer, "Id", "DisplayName", projDevs);
+
+
+            var Submitter = projSubs.ToList();
+            ViewBag.Subs = new SelectList(Submitter, "Id", "DisplayName", projSubs);
+
             return View(project);
+
         }
         [Authorize(Roles = ("Admin,Project Manager"))]
         // GET: Projects/Create

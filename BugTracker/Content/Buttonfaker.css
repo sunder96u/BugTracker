@@ -1,6 +1,13 @@
 ﻿body {
 }
 
-#fakebutton{
-    border: inset 5px;
+.col-md-2{
+
+}
+.no-offset{
+    width:150px;
+}
+.no-offset-2 {
+
+    width: 200px;
 }

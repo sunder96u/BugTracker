@@ -61,7 +61,7 @@ namespace BugTracker.Controllers
 
                 if (FileUploadValidator.IsWebFriendlyFile(image))
                 {
-                    var fileName = Path.GetFileName(image.FileName);
+                    var fileName = Path.GetFileName(image.FileName).Replace(' ','_');
                     image.SaveAs(Path.Combine(Server.MapPath("~/FilesUploaded/"), fileName));
                     ticketAttachment.FilePath = "/FilesUploaded/" + fileName;
                 }

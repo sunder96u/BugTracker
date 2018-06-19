@@ -85,7 +85,7 @@ namespace BugTracker.Migrations
                     new TicketType { Name = "Update" }
                 );
 
-            context.TicketStatus.AddOrUpdate(
+            context.TicketStatuses.AddOrUpdate(
                 t => t.Name,
                     new TicketStatus { Name = "Unassigned" },
                     new TicketStatus { Name = "Not in Progress" },

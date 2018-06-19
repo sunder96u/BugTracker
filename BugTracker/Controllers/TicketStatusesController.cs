@@ -19,7 +19,7 @@ namespace BugTracker.Controllers
         // GET: TicketStatuses
         public ActionResult Index()
         {
-            return View(db.TicketStatus.ToList());
+            return View(db.TicketStatuses.ToList());
         }
 
         // GET: TicketStatuses/Details/5
@@ -29,7 +29,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TicketStatus ticketStatus = db.TicketStatus.Find(id);
+            TicketStatus ticketStatus = db.TicketStatuses.Find(id);
             if (ticketStatus == null)
             {
                 return HttpNotFound();
@@ -52,7 +52,7 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.TicketStatus.Add(ticketStatus);
+                db.TicketStatuses.Add(ticketStatus);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -67,7 +67,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TicketStatus ticketStatus = db.TicketStatus.Find(id);
+            TicketStatus ticketStatus = db.TicketStatuses.Find(id);
             if (ticketStatus == null)
             {
                 return HttpNotFound();
@@ -98,7 +98,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TicketStatus ticketStatus = db.TicketStatus.Find(id);
+            TicketStatus ticketStatus = db.TicketStatuses.Find(id);
             if (ticketStatus == null)
             {
                 return HttpNotFound();
@@ -111,8 +111,8 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            TicketStatus ticketStatus = db.TicketStatus.Find(id);
-            db.TicketStatus.Remove(ticketStatus);
+            TicketStatus ticketStatus = db.TicketStatuses.Find(id);
+            db.TicketStatuses.Remove(ticketStatus);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -1,5 +1,6 @@
 ﻿@model BugTracker.Models.Project
-
+@using BugTracker.Helpers
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Details";
 }
@@ -8,8 +9,207 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+@{
+    var tickethelper = new TicketHelper();
+    var projhelper = new ProjectHelper();
+    var rolehelper = new UserRolesHelper();
+}
 
 <section id="widget-grid" class="">
+    <div class="col-lg-12 well">
+        <div class="row">
+
+            <!-- NEW WIDGET START -->
+            <article class="col-sm-4 col-md-4 col-lg-4">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget jarviswidget-color-darken" id="ProjectManagers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                    <!-- widget options:
+                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                    data-widget-colorbutton="false"
+                    data-widget-editbutton="false"
+                    data-widget-togglebutton="false"
+                    data-widget-deletebutton="false"
+                    data-widget-fullscreenbutton="false"
+                    data-widget-custombutton="false"
+                    data-widget-collapsed="true"
+                    data-widget-sortable="false"
+
+                    -->
+                    <header>
+                        <span class="widget-icon"> <i></i> </span>
+                        <h2>Project Manager</h2>
+
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+
+                            <form class="form-horizontal">
+                                <fieldset>
+                                    <legend>Project Manager</legend>
+                                    <div class="form-group">
+                                        <div class="well">
+                                            @{
+                                                foreach (var user in projhelper.UsersOnProject(Model.Id).ToList())
+                                                {
+                                                    if (rolehelper.IsUserInRole(user.Id, "Project Manager"))
+                                                    {
+                                                        @user.DisplayName<br />
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+            </article>
+            <!-- NEW WIDGET START -->
+            <article class="col-sm-4 col-md-4 col-lg-4">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget jarviswidget-color-darken" id="Developers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                    <!-- widget options:
+                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                    data-widget-colorbutton="false"
+                    data-widget-editbutton="false"
+                    data-widget-togglebutton="false"
+                    data-widget-deletebutton="false"
+                    data-widget-fullscreenbutton="false"
+                    data-widget-custombutton="false"
+                    data-widget-collapsed="true"
+                    data-widget-sortable="false"
+
+                    -->
+                    <header>
+                        <span class="widget-icon"> <i></i> </span>
+                        <h2>Developer</h2>
+
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+
+                            <form class="form-horizontal">
+                                <fieldset>
+                                    <legend>Developers</legend>
+                                    <div class="form-group">
+                                        <div class="well">
+                                            @{
+                                                foreach (var user in projhelper.UsersOnProject(Model.Id).ToList())
+                                                {
+                                                    if (rolehelper.IsUserInRole(user.Id, "Developer"))
+                                                    {
+                                                       @user.DisplayName<br />
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+            </article>
+            <!-- NEW WIDGET START -->
+            <article class="col-sm-4 col-md-4 col-lg-4">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget jarviswidget-color-darken" id="Submitters" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                    <!-- widget options:
+                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                    data-widget-colorbutton="false"
+                    data-widget-editbutton="false"
+                    data-widget-togglebutton="false"
+                    data-widget-deletebutton="false"
+                    data-widget-fullscreenbutton="false"
+                    data-widget-custombutton="false"
+                    data-widget-collapsed="true"
+                    data-widget-sortable="false"
+
+                    -->
+                    <header>
+                        <span class="widget-icon"> <i></i> </span>
+                        <h2>Submitter</h2>
+
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+
+                            <form class="form-horizontal">
+                                <fieldset>
+                                    <legend>Submitters</legend>
+                                    <div class="form-group">
+                                        <div class="well">
+                                            @{
+                                                foreach (var user in projhelper.UsersOnProject(Model.Id).ToList())
+                                                {
+                                                    if (rolehelper.IsUserInRole(user.Id, "Submitter"))
+                                                    {
+                                                        @user.DisplayName<br />
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+            </article>
+        </div>
+    </div>
     <div class="row">
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-colorbutton="false">
@@ -60,7 +260,7 @@
                             @foreach (var item in Model.Tickets)
                             {
                                 <tbody>
-                                    <tr  class="tablelink">
+                                    <tr class="tablelink">
                                         <td>
                                             <a> @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, new { Style = "color:Black;" }) </a>
                                         </td>
