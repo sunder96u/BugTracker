@@ -35,7 +35,7 @@ namespace BugTracker.Controllers
         //Post:
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AssignPMs(List<int> Projects, string PMs)
+        public ActionResult AssignPMs(/*[Bind(Include = "Id,ProjectId")]*/List<int> Projects, string PMs)
           {
             if (ModelState.IsValid)
             {

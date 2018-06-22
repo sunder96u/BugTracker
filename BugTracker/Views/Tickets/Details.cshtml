@@ -1,5 +1,5 @@
 ﻿@model BugTracker.Models.Ticket
-    @using BugTracker.Helpers
+@using BugTracker.Helpers
 @using Microsoft.AspNet.Identity
 @using System.Collections.Generic
 
@@ -22,7 +22,7 @@
             <article class="col-sm-4 col-md-4 col-lg-4">
 
                 <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-darken" id="ProjectManagers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="ProjectManagers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -86,7 +86,7 @@
             <article class="col-sm-4 col-md-4 col-lg-4">
 
                 <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-darken" id="Developers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="Developers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -125,6 +125,13 @@
                                         <div class="well">
                                             <label>@Model.AssignedToUser.DisplayName</label>
                                         </div>
+                                        <br />
+                                        @if ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), Model.ProjectId))) || (User.IsInRole("Admin")))
+                                        {
+                                        <button class="btn btn-primary">
+                                            @Html.ActionLink("Add/Change Dev", "AssignDev", "Tickets", new { id = Model.Id }, new { Style = "color:White;" })
+                                        </button>
+                                        }
                                     </div>
                                 </fieldset>
                             </form>
@@ -141,7 +148,7 @@
             <article class="col-sm-4 col-md-4 col-lg-4">
 
                 <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-darken" id="Submitters" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="Submitters" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -201,7 +208,7 @@
             <article class="col-sm-12 col-md-12 col-lg-12">
 
                 <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -239,62 +246,58 @@
                                 <legend>Ticket Details</legend>
                                 <div class="row">
 
-                                        <div class="col-md-2 col-md-offset-1 no-offset">
-                                            <h3 class="no-offset">Project Name:</h3>
-                                        </div>
-                                        <div class="col-md-2 well">
-                                            @Model.Project.Name
-                                        </div>
-                                        <div class="col-md-2 col-md-offset-1 no-offset">
-                                            <h3 class="no-offset">Ticket Title:</h3>
-                                        </div>
-                                        <div class="col-md-2 well">
-                                            @Model.Title
-                                        </div>
-                                        <div class="col-md-8"></div>
+                                    <div class="col-md-2 col-md-offset-1 no-offset">
+                                        <h3 class="no-offset">Project Name:</h3>
+                                    </div>
+                                    <div class="col-md-2 well">
+                                        @Model.Project.Name
+                                    </div>
+                                    <div class="col-md-2 col-md-offset-1 no-offset">
+                                        <h3 class="no-offset">Ticket Title:</h3>
+                                    </div>
+                                    <div class="col-md-2 well">
+                                        @Model.Title
+                                    </div>
+                                    <div class="col-md-8"></div>
 
                                 </div>
                                 <div class="row">
 
-                                        @using (Html.BeginForm("EditStatus", "Tickets", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+                                    @using (Html.BeginForm("EditStatus", "Tickets", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+                                    {
+
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("Id", Model.Id)
+                                        @Html.Hidden("Title", Model.Title)
+                                        @Html.Hidden("Description", Model.Description)
+                                        var userId = User.Identity.GetUserId();
+
+                                        if (User.IsInRole("Developer") && (Model.AssignedToUserId == userId))
                                         {
-
-                                            @Html.AntiForgeryToken()
-                                            @Html.Hidden("Id", Model.Id)
-                                            @Html.Hidden("Title", Model.Title)
-                                            @Html.Hidden("Description", Model.Description)
-                                            var userId = User.Identity.GetUserId();
-
-                                            if (User.IsInRole("Developer") && (Model.AssignedToUserId == userId))
-                                            {
-                                                <div class="col-md-2 col-md-offset-1 no-offset">
-                                                    <h3 class="no-offset">Ticket Status:</h3>
-                                                </div>
-                                                <div class="well col-md-2">
-                                                    @Html.DropDownList("TicketStatusId", null, htmlAttributes: new { @class = "form-control" })
-                                                    <button class="btn btn-primary" type="submit">
-                                                        <i class="fa fa-save"></i>
-                                                        Submit
-                                                    </button>
-                                                </div>
-                                            }
-
-                                            if (User.IsInRole("Submitter") || User.IsInRole("Project Manager") || User.IsInRole("Admin") || (User.IsInRole("Developer") && (Model.AssignedToUserId != userId)))
-                                            {
-                                                <div class="col-md-2 col-md-offset-1 no-offset">
-                                                    <h3 class="no-offset">Ticket Status:</h3>
-                                                </div>
-                                                <div class="col-md-2 well"> @Model.TicketStatus.Name</div>
-                                            }
+                                            <div class="col-md-2 col-md-offset-1 no-offset">
+                                                <h3 class="no-offset">Ticket Status:</h3>
+                                            </div>
+                                            <div class="well col-md-2">
+                                                @Html.DropDownList("TicketStatusId", null, htmlAttributes: new { @class = "form-control" })
+                                                <button class="btn btn-primary" type="submit">
+                                                    <i class="fa fa-save"></i>
+                                                    Submit
+                                                </button>
+                                            </div>
                                         }
-                                        <div class="col-md-2 col-md-offset-1 no-offset">
-                                            <h3 class="no-offset">Ticket Type:</h3>
-                                        </div>
-                                        <div class="col-md-2 well"> @Model.TicketType.Name</div>
-                                        <div class="col-md-2 col-md-offset-1 no-offset">
-                                            <h3 class="no-offset">Ticket Priority:</h3>
-                                        </div>
-                                        <div class="col-md-2 well"> @Model.TicketPriority.Name</div>
+
+                                        if (User.IsInRole("Submitter") || User.IsInRole("Project Manager") || User.IsInRole("Admin") || (User.IsInRole("Developer") && (Model.AssignedToUserId != userId)))
+                                        {
+                                            <div class="col-md-2 col-md-offset-1 no-offset">
+                                                <h3 class="no-offset">Ticket Status:</h3>
+                                            </div>
+                                            <div class="col-md-2 well"> @Model.TicketStatus.Name</div>
+                                        }
+                                    }
+                                    <div class="col-md-2 col-md-offset-1 no-offset">
+                                        <h3 class="no-offset">Ticket Type:</h3>
+                                    </div>
+                                    <div class="col-md-2 well"> @Model.TicketType.Name</div>
 
                                 </div>
                                 <div class="row">
@@ -306,13 +309,10 @@
                                         <h3 class="no-offset">Date Created:</h3>
                                     </div>
                                     <div class="col-md-2 well"> @created[0] &#64; @created[1] @created[2]</div>
-                                    @if (Model.Updated != null)
-                                    {
-                                        <div class="col-md-2 col-md-offset-1 no-offset">
-                                            <h3 class="no-offset">Last Updated:</h3>
-                                        </div>
-                                        <div class="col-md-2 well">@updated[0] &#64; @updated[1] @updated[2]</div>
-                                    }
+                                    <div class="col-md-2 col-md-offset-1 no-offset">
+                                        <h3 class="no-offset">Ticket Priority:</h3>
+                                    </div>
+                                    <div class="col-md-2 well"> @Model.TicketPriority.Name</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-md-offset-1 no-offset-2">
@@ -321,29 +321,29 @@
                                     <div class=" col-md-8 well">@Model.Description</div>
                                 </div>
                             </fieldset>
-                                <br />
-                                <div>
-                                    <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#History">Ticket History</button>
-                                    <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Notification">Ticket Notifications</button>
-                                </div>
-                                <div class="form-actions">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button class="btn btn-default" type="button" onclick="window.history.back();">
-                                                Back
-                                            </button>
-                                            @if ((User.IsInRole("Developer") && (Model.AssignedToUserId == User.Identity.GetUserId())) ||
-                                            (User.IsInRole("Submitter") && (Model.OwnerUserId == User.Identity.GetUserId())) ||
-                                            (User.IsInRole("Project Manager")&& (projhelper.IsUserOnProject(User.Identity.GetUserId(),Model.ProjectId))) ||
-                                            (User.IsInRole("Admin")))
-                                            {
+                            <br />
+                            <div>
+                                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#History">Ticket History</button>
+                                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Notification">Ticket Notifications</button>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-default" type="button" onclick="window.history.back();">
+                                            Back
+                                        </button>
+                                        @if ((User.IsInRole("Developer") && (Model.AssignedToUserId == User.Identity.GetUserId())) ||
+                                        (User.IsInRole("Submitter") && (Model.OwnerUserId == User.Identity.GetUserId())) ||
+                                        (User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), Model.ProjectId))) ||
+                                        (User.IsInRole("Admin")))
+                                        {
                                             <button class="btn btn-primary">
                                                 @Html.ActionLink("Edit", "Edit", "Tickets", new { id = Model.Id }, new { Style = "color:White;" })
                                             </button>
-                                            }
-                                        </div>
+                                        }
                                     </div>
                                 </div>
+                            </div>
                             @*</form>*@
 
                         </div>
@@ -367,7 +367,7 @@
                 <article class="col-sm-12 col-md-12 col-lg-12">
 
                     <!-- Widget ID (each widget will need unique ID)-->
-                    <div class="jarviswidget jarviswidget-color-darken" id="Attachments" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                    <div class="jarviswidget jarviswidget-color-blueDark" id="Attachments" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                         <!-- widget options:
                         usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -397,7 +397,7 @@
                             </div>
                             <!-- end widget edit box -->
                             <!-- widget content -->
-                            <div class="widget-body small">
+                            <div class="widget-body  no-overflow">
 
                                 <form class="form-horizontal">
 
@@ -422,17 +422,17 @@
                                                                 // I would like some sort of pop up that will allow the user to view the file to appear
 
                                                                 @*if (Path.GetExtension(attach.FilePath) == ".jpg")
-                                                                    {
-                                                                        <img class="img-responsive smlimage" src="~/Images/jpg.png" alt="jpg file" />
-                                                                    }
-                                                                    if (Path.GetExtension(attach.FilePath) == ".PNG")
-                                                                    {
-                                                                        <img class="img-responsive smlimage" src="~/Images/png.jpg" alt="jpg file" />
-                                                                    }
-                                                                    if (Path.GetExtension(attach.FilePath) == ".xls" || Path.GetExtension(attach.FilePath) == ".xlsx")
-                                                                    {
-                                                                        <img class="img-responsive smlimage" src="~/Images/.xls" alt="jpg file" />
-                                                                    }*@
+                                        {
+                                            <img class="img-responsive smlimage" src="~/Images/jpg.png" alt="jpg file" />
+                                        }
+                                        if (Path.GetExtension(attach.FilePath) == ".PNG")
+                                        {
+                                            <img class="img-responsive smlimage" src="~/Images/png.jpg" alt="jpg file" />
+                                        }
+                                        if (Path.GetExtension(attach.FilePath) == ".xls" || Path.GetExtension(attach.FilePath) == ".xlsx")
+                                        {
+                                            <img class="img-responsive smlimage" src="~/Images/.xls" alt="jpg file" />
+                                        }*@
                                                                 <a class="btn bg-color-darken txt-color-white" href="@attach.FilePath" download="@attach.FilePath.ToString().Split('/')[2]">@attach.FilePath.ToString().Split('/')[2]</a>
                                                                 <br />
                                                                 <img class="img-responsive" src="@attach.FilePath" alt="" height="400" width="400" />
@@ -455,7 +455,7 @@
 
             @if ((User.IsInRole("Developer") && (Model.AssignedToUserId == User.Identity.GetUserId())) ||
         (User.IsInRole("Submitter") && (Model.OwnerUserId == User.Identity.GetUserId())) ||
-        (User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(),Model.ProjectId))) ||
+        (User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), Model.ProjectId))) ||
         (User.IsInRole("Admin")))
             {
 
@@ -466,7 +466,7 @@
                     <article class="col-sm-12 col-md-12 col-lg-12">
 
                         <!-- Widget ID (each widget will need unique ID)-->
-                        <div class="jarviswidget jarviswidget-color-darken" id="AttachWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                        <div class="jarviswidget jarviswidget-color-blueDark" id="AttachWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                             <!-- widget options:
                             usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -529,10 +529,12 @@
                                                             </div>
                                                         </div>
                                                         <br />
+                                                        <br/>
+                                                        <br />
                                                         <div class="row">
                                                             <div class="col-md-12">
 
-                                                                <button class="btn btn-primary" type="submit">
+                                                                &#160; <button class="btn btn-primary" type="submit">
                                                                     <i class="fa fa-save"></i>
                                                                     Submit
                                                                 </button>
@@ -559,7 +561,7 @@
                 <!-- NEW WIDGET START -->
                 <article class="col-sm-12 col-md-12 col-lg-12">
                     <!-- Widget ID (each widget will need unique ID)-->
-                    <div class="jarviswidget jarviswidget-color-darken" id="Comments" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                    <div class="jarviswidget jarviswidget-color-blueDark" id="Comments" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                         <!-- widget options:
                          usage: <div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
                          data-widget-colorbutton="false"
@@ -583,7 +585,7 @@
                             </div>
                             <!-- end widget edit box -->
                             <!-- widget content -->
-                            <div class="widget-body">
+                            <div class="widget-body  no-overflow">
                                 <form class="form-horizontal">
                                     <fieldset id="Comment">
                                         @foreach (var comment in Model.TicketComments.OrderByDescending(p => p.Created))
@@ -624,7 +626,7 @@
                     <!-- NEW WIDGET START -->
                     <article class="col-sm-12 col-md-12 col-lg-12">
                         <!-- Widget ID (each widget will need unique ID)-->
-                        <div class="jarviswidget jarviswidget-color-darken" id="CommWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                        <div class="jarviswidget jarviswidget-color-blueDark" id="CommWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                             <!-- widget options:
                              usage: <div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
                              data-widget-colorbutton="false"
@@ -662,6 +664,7 @@
                                                             {
                                                                 @Html.AntiForgeryToken()
                                                                 @Html.Hidden("TicketId", Model.Id)
+                                                            
                                                                 <div class="form-group">
                                                                     <div class="col-md-12">
                                                                         @Html.TextArea("CommentBody", "", new { @class = "form-control", @value = "" })
@@ -669,10 +672,12 @@
                                                                     </div>
                                                                 </div>
                                                                 <br />
+                                                                <br />
+                                                                <br />
                                                                 <div class="row">
                                                                     <div class="col-md-12">
 
-                                                                        <button class="btn btn-primary" type="submit">
+                                                                        &#160; <button class="btn btn-primary" type="submit">
                                                                             <i class="fa fa-save"></i>
                                                                             Submit
                                                                         </button>
@@ -707,14 +712,101 @@
                     <h4 class="modal-title" align="center">Ticket History:</h4>
                 </div>
                 <div class="modal-body">
-                </div>
 
+
+                            <!-- NEW WIDGET START -->
+                            <article class="col-sm-12 col-md-12 col-lg-12">
+
+                                <!-- Widget ID (each widget will need unique ID)-->
+                                <div class="jarviswidget jarviswidget-color-blueDark" id="HistoryWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                                    <!-- widget options:
+                                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                                    data-widget-colorbutton="false"
+                                    data-widget-editbutton="false"
+                                    data-widget-togglebutton="false"
+                                    data-widget-deletebutton="false"
+                                    data-widget-fullscreenbutton="false"
+                                    data-widget-custombutton="false"
+                                    data-widget-collapsed="true"
+                                    data-widget-sortable="false"
+
+                                    -->
+                                    <header>
+                                        <span class="widget-icon"> <i></i> </span>
+                                        <h2></h2>
+
+                                    </header>
+
+                                    <!-- widget div-->
+                                    <div>
+
+                                        <!-- widget edit box -->
+                                        <div class="jarviswidget-editbox">
+                                            <!-- This area used as dropdown edit box -->
+
+                                        </div>
+                                        <!-- end widget edit box -->
+                                        <!-- widget content -->
+                                        <div class="widget-body  no-overflow">
+
+
+                                            <fieldset>
+                                                @using (Html.BeginForm("Index", "TicketHistories", FormMethod.Post))
+                                                {
+                                                    foreach (var item in Model.TicketHistories.OrderByDescending(t => t.Changed))
+                                                    {
+
+                                                        var date = item.Changed.ToString().Split(' ');
+
+                                                        <div class="row ">
+                                                            <div class="col-md-6 well">
+                                                                <h4>Edited by:</h4><label> &#160;@item.User.DisplayName</label>
+                                                                <h4>Edited on:</h4><label> &#160;@date[0] &#64 @date[1]  @date[2]</label>
+                                                                <h4>Property Changed:</h4><label> &#160; @item.Property</label>
+
+                                                            </div>
+                                                            <div class="col-md-6 well" id="longer-well">
+
+                                                                <label>&#160; </label> <br />
+                                                                <h4>Old Value:</h4><label> &#160; @item.OldValue</label> <br />
+                                                                <h4>New Value:</h4><label> &#160; @item.NewValue</label> <br />
+                                                                <label>&#160; </label> <br />
+
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <br />
+                                                    }
+                                                }
+                                            </fieldset>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div id="Notification" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
             <!-- Modal content-->
@@ -724,8 +816,66 @@
                     <h4 class="modal-title" align="center">Ticket Notifications:</h4>
                 </div>
                 <div class="modal-body">
-                </div>
+                            <!-- NEW WIDGET START -->
+                            <article class="col-sm-12 col-md-12 col-lg-12">
 
+                                <!-- Widget ID (each widget will need unique ID)-->
+                                <div class="jarviswidget jarviswidget-color-blueDark" id="NotificationWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                                    <!-- widget options:
+                                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                                    data-widget-colorbutton="false"
+                                    data-widget-editbutton="false"
+                                    data-widget-togglebutton="false"
+                                    data-widget-deletebutton="false"
+                                    data-widget-fullscreenbutton="false"
+                                    data-widget-custombutton="false"
+                                    data-widget-collapsed="true"
+                                    data-widget-sortable="false"
+
+                                    -->
+                                    <header>
+                                        <span class="widget-icon"> <i></i> </span>
+                                        <h2></h2>
+
+                                    </header>
+
+                                    <!-- widget div-->
+                                    <div>
+
+                                        <!-- widget edit box -->
+                                        <div class="jarviswidget-editbox">
+                                            <!-- This area used as dropdown edit box -->
+
+                                        </div>
+                                        <!-- end widget edit box -->
+                                        <!-- widget content -->
+                                        <div class="widget-body no-overflow">
+
+
+                                            <fieldset>
+                                                @using (Html.BeginForm("Index", "TicketNotifications", FormMethod.Post))
+                                                {
+                                                    foreach (var item in Model.TicketNotifications.OrderByDescending(t => t.Id))
+                                                    {
+
+                                                        <div class="row well">
+                                                            <div class="col-md-12">
+                                                                @Html.Raw(item.Body)
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <br />
+                                                    }
+                                                }
+                                            </fieldset>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
                 </div>

@@ -143,10 +143,161 @@ namespace BugTracker.Controllers
                     projectHelper.AddUserToProject(subId, project.Id);
                 }
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "Projects", new { Id = project.Id });
             }
             return View();
         }
+
+
+        // GET: Admin
+        public ActionResult AssignPMs()
+        {
+            // 1. Setup a MultiSelectList to display all the Projects in our system
+            ViewBag.Projects = new MultiSelectList(db.Projects, "Id", "Name");
+
+
+
+            // 2. Set up a Select List to display all the PM's in the system
+            var ProjectManagers = rolesHelper.UsersInRole("Project Manager");
+            ViewBag.PMs = new MultiSelectList(ProjectManagers, "Id", "DisplayName");
+
+            return View();
+        }
+
+
+        //Post:
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignPMs([Bind(Include = "Id,ProjectId")] Project project, List<string> PMs)
+        {
+            if (ModelState.IsValid)
+            {
+                //Assign the user to the selected role
+                //Determine if the user currently occupies a role, and if so remove them form it
+                var UsersOnProject = projectHelper.UsersOnProject(project.Id).ToList();
+
+                foreach (var user in UsersOnProject)
+                {
+                    if (!rolesHelper.IsUserInRole(user.Id, "Submitter") && !rolesHelper.IsUserInRole(user.Id, "Developer"))
+                        projectHelper.RemoveUserFromProject(user.Id, project.Id);
+                }
+
+                foreach (var PM in PMs)
+                {
+                    projectHelper.AddUserToProject(PM, project.Id);
+                }
+
+                return RedirectToAction("Details", "Projects", new { Id = project.Id });
+
+            }
+            return View();
+        }
+
+        //Get:
+        public ActionResult AssignSubmitter(int id)
+        {
+            Project project = db.Projects.Find(id);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+            // 1. Setup a MultiSelectList to display all the Projects in our system
+            var UsersOnProject = projectHelper.UsersOnProject(id);
+            var projDevs = new List<string>();
+            var projSubs = new List<string>();
+            foreach (var subUser in UsersOnProject)
+            {
+                if (rolesHelper.IsUserInRole(subUser.Id, "Submitter"))
+                    projDevs.Add(subUser.Id);
+            }
+
+            var Submitter = rolesHelper.UsersInRole("Submitter");
+            ViewBag.Subs = new MultiSelectList(Submitter, "Id", "DisplayName", projSubs);
+
+
+            return View(project);
+        }
+
+        //Post:
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignSubmitter([Bind(Include = "Id,Name")] Project project, List<string> Subs)
+        {
+            if (ModelState.IsValid)
+            {
+                //Assign the user to the selected role
+                //Determine if the user currently occupies a project, and if so remove them from it
+                var UsersOnProject = projectHelper.UsersOnProject(project.Id).ToList();
+
+                foreach (var user in UsersOnProject)
+                {
+                    if (!rolesHelper.IsUserInRole(user.Id, "Project Manager") && !rolesHelper.IsUserInRole(user.Id, "Developer"))
+                        projectHelper.RemoveUserFromProject(user.Id, project.Id);
+                }
+
+                foreach (var subId in Subs)
+                {
+                    projectHelper.AddUserToProject(subId, project.Id);
+                }
+
+                return RedirectToAction("Details", "Projects", new { Id = project.Id });
+            }
+            return View();
+        }
+
+        //Get:
+        public ActionResult AssignDeveloper(int id)
+        {
+            Project project = db.Projects.Find(id);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+            // 1. Setup a MultiSelectList to display all the Projects in our system
+            var UsersOnProject = projectHelper.UsersOnProject(id);
+            var projDevs = new List<string>();
+            var projSubs = new List<string>();
+
+            foreach (var devUser in UsersOnProject)
+            {
+                if (rolesHelper.IsUserInRole(devUser.Id, "Developer"))
+                    projDevs.Add(devUser.Id);
+            }
+
+            var Developer = rolesHelper.UsersInRole("Developer");
+            ViewBag.Devs = new MultiSelectList(Developer, "Id", "DisplayName", projDevs);
+
+
+            return View(project);
+        }
+
+        //Post:
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignDeveloper([Bind(Include = "Id,Name")] Project project, List<string> Devs)
+        {
+            if (ModelState.IsValid)
+            {
+                //Assign the user to the selected role
+                //Determine if the user currently occupies a project, and if so remove them from it
+                var UsersOnProject = projectHelper.UsersOnProject(project.Id).ToList();
+
+                foreach (var user in UsersOnProject)
+                {
+                    if (!rolesHelper.IsUserInRole(user.Id, "Project Manager") && !rolesHelper.IsUserInRole(user.Id, "Submitter"))
+                        projectHelper.RemoveUserFromProject(user.Id, project.Id);
+                }
+
+                foreach (var devId in Devs)
+                {
+                    projectHelper.AddUserToProject(devId, project.Id);
+                }
+
+                return RedirectToAction("Details", "Projects", new { Id = project.Id });
+            }
+            return View();
+        }
+
 
 
         // GET: Projects/Details/5

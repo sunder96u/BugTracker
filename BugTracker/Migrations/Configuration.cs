@@ -99,7 +99,8 @@ namespace BugTracker.Migrations
                 p => p.Name,
                    new ProjectStats { Name = "Open" },
                    new ProjectStats { Name = "Closed" },
-                   new ProjectStats { Name = "On Hold" }
+                   new ProjectStats { Name = "On Hold" },
+                   new ProjectStats { Name = "Waiting on Approval" }
                 );
 
             context.AllowedFileTypes.AddOrUpdate(

@@ -23,7 +23,7 @@
             <article class="col-sm-4 col-md-4 col-lg-4">
 
                 <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-darken" id="ProjectManagers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="ProjectManagers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -70,6 +70,14 @@
                                                 }
                                             }
                                         </div>
+                                        <br />
+                                        @if ((User.IsInRole("Project Manager")|| (User.IsInRole("Admin")))
+                                        {
+                                            <button class="btn btn-primary">
+                                                @Html.ActionLink("Assign PM's", "AssignDeveloper", "Projects", new { id = Model.Id }, new { Style = "color:White;" })
+                                            </button>
+                                        }
+                                    </div>
                                     </div>
                                 </fieldset>
                             </form>
@@ -86,7 +94,7 @@
             <article class="col-sm-4 col-md-4 col-lg-4">
 
                 <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-darken" id="Developers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="Developers" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -128,11 +136,18 @@
                                                 {
                                                     if (rolehelper.IsUserInRole(user.Id, "Developer"))
                                                     {
-                                                       @user.DisplayName<br />
+                                                        @user.DisplayName<br />
                                                     }
                                                 }
                                             }
                                         </div>
+                                        <br />
+                                        @if ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), Model.Id))) || (User.IsInRole("Admin")))
+                                        {
+                                            <button class="btn btn-primary">
+                                                @Html.ActionLink("Add/Change Devs", "AssignDeveloper", "Projects", new { id = Model.Id }, new { Style = "color:White;" })
+                                            </button>
+                                        }
                                     </div>
                                 </fieldset>
                             </form>
@@ -149,7 +164,7 @@
             <article class="col-sm-4 col-md-4 col-lg-4">
 
                 <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-darken" id="Submitters" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="Submitters" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-collapsed="true">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -196,6 +211,13 @@
                                                 }
                                             }
                                         </div>
+                                        <br />
+                                        @if ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), Model.Id))) || (User.IsInRole("Admin")))
+                                        {
+                                            <button class="btn btn-primary">
+                                                @Html.ActionLink("Add/Change Submitters", "AssignSubmitter", "Projects", new { id = Model.Id }, new { Style = "color:White;" })
+                                            </button>
+                                        }
                                     </div>
                                 </fieldset>
                             </form>
@@ -212,7 +234,7 @@
     </div>
     <div class="row">
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-colorbutton="false">
+            <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-colorbutton="false">
                 <header>
                     <span class="widget-icon"> <i class="fa fa-ticket"></i> </span>
                     <h2>All Tickets for @Model.Name</h2>

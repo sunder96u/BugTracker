@@ -29,5 +29,32 @@ namespace BugTracker.Controllers
 
             return View();
         }
+
+        public ActionResult Oops()
+        {
+            if(TempData["oopsMsg"] != null)
+            {
+                ViewBag.OopsMsg = TempData["oopsMsg"].ToString();
+            }
+            return View();
+        }
+
+        public ActionResult Oops2()
+        {
+            if (TempData["oopsMsg"] != null)
+            {
+                ViewBag.OopsMsg = TempData["oopsMsg"].ToString();
+            }
+            return View();
+        }
+
+        public ActionResult Oops3()
+        {
+            if (TempData["oopsMsg"] != null)
+            {
+                ViewBag.OopsMsg = TempData["oopsMsg"].ToString();
+            }
+            return View();
+        }
     }
 }

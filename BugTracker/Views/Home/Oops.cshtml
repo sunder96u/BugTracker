@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Oops";
+
+}
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <!--Page Heading-->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Oops <small>Something went wrong!</small>
+                </h1>
+            </div>
+        </div>
+        <!--/.row-->
+    </div>
+    <!--/.container-fluid-->
+    <div class="container">
+        <div class="row">
+            @if (User.IsInRole("Developer"))
+            {
+            <h4> It appears that you are trying to Edit a ticket you are not assigned to!</h4>
+            <h4> </h4>
+            <h4> Please contact the ticket's Project Manager(s) to edit the ticket, or to get assigned to the ticket</h4>
+            }
+        </div>
+        @if (User.IsInRole("Submitter"))
+        {
+        <div class="row">
+            <h4> It appears that you are trying to Edit a ticket you did not create!</h4>
+            <h4> </h4>
+            <h4> Please contact the ticket's Project Manager(s) to edit the ticket</h4>
+        </div>
+        }
+        @if (User.IsInRole("Project Manager"))
+        {
+        <div class="row">
+            <h4> It appears that you are trying to Edit a ticket that is not on a Project you are assigned to!</h4>
+            <h4> </h4>
+            <h4> Please contact the ticket's Project Manager(s) to edit the ticket, or ask an Administrator to assign the project to you!</h4>
+        </div>
+        }
+    </div>
+</div>
+<!--/#page-wrapper-->
+
+@section scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        let data = '@TempData["OopsMsg"]';
+
+        if (data != '') {
+            window.onload = function () {
+                swal("Authorization Error", data, "error");
+            }
+        }
+
+    </script>
+}

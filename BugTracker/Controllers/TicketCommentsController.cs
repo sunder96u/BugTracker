@@ -4,8 +4,10 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Extension_Methods;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 
@@ -44,7 +46,10 @@ namespace BugTracker.Controllers
         {
             //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
             //ViewBag.UserId = new SelectList(db.Users, "Id", "UserName");
-            return View();
+            var ticketComments = db.TicketComments.Include(t => t.Ticket).Include(n => n.User);
+
+
+            return View(ticketComments.ToList());
         }
 
         // POST: TicketComments/Create
@@ -54,14 +59,25 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,CommentBody,Created,TicketId,UserId")] TicketComment ticketComment)
         {
+            var oldTicketComment = db.TicketComments.AsNoTracking().FirstOrDefault(t => t.Id == ticketComment.TicketId);
+
             if (ModelState.IsValid)
             {
                 ticketComment.Created = DateTimeOffset.Now;
                 ticketComment.UserId = User.Identity.GetUserId();
+
+                ticketComment.User = db.Users.Find(ticketComment.UserId);
+                ticketComment.Ticket = db.Tickets.Find(ticketComment.TicketId);
+
                 db.TicketComments.Add(ticketComment);
                 db.SaveChanges();
+
+                ticketComment.CommentAdded(oldTicketComment);
+
                 var id = db.Tickets.Find(ticketComment.TicketId).Id;
                 return RedirectToAction("Details", "Tickets", new { Id = id });
+
+
             }
 
             //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketComment.TicketId);

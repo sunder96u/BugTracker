@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "Oops2";
+
+}
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <!--Page Heading-->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Oops <small>Something went wrong!</small>
+                </h1>
+            </div>
+        </div>
+        <!--/.row-->
+    </div>
+    <!--/.container-fluid-->
+    <div class="container">
+        <div class="row">
+            <h4> You are not authorized to view this page.</h4>
+            <h4>Please login with as a valid user!</h4>
+        </div>
+    </div>
+</div>
+<!--/#page-wrapper-->
+
+@section scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        let data = '@TempData["OopsMsg"]';
+
+        if (data != '') {
+            window.onload = function () {
+                swal("Authorization Error", data, "error");
+            }
+        }
+
+    </script>
+}
+

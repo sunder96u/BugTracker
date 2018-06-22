@@ -4,8 +4,11 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Action_Filters;
+using BugTracker.Extension_Methods;
 using BugTracker.Helpers;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
@@ -20,6 +23,7 @@ namespace BugTracker.Controllers
         private UserRolesHelper rolesHelper = new UserRolesHelper();
         private ProjectHelper projectHelper = new ProjectHelper();
         private TicketHelper ticketHelper = new TicketHelper();
+
 
         // GET: Tickets
         public ActionResult Index()
@@ -105,6 +109,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Edit/5
+        [TicketAuthorization]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -130,13 +135,27 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,Title,Description,Updated,ProjectId,TicketTypeId,TicketPriorityId")] Ticket ticket)
         {
+            var oldTicket = db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
+
             if (ModelState.IsValid)
             {
                 ticket.Updated = DateTimeOffset.Now;
-                db.Entry(ticket).State = EntityState.Modified;
+                ticket.TicketStatusId = 1;
+                db.Tickets.Attach(ticket);
+                db.Entry(ticket).Property(p => p.TicketStatusId).IsModified = false;
+                db.Entry(ticket).Property(p => p.Title).IsModified = true;
+                db.Entry(ticket).Property(p => p.Description).IsModified = true;
+                db.Entry(ticket).Property(p => p.Updated).IsModified = true;
+                db.Entry(ticket).Property(p => p.ProjectId).IsModified = true;
+                db.Entry(ticket).Property(p => p.TicketTypeId).IsModified = true;
+                db.Entry(ticket).Property(p => p.TicketPriorityId).IsModified = true;
+
                 db.SaveChanges();
+
+                ticket.RecordChanges(oldTicket);
+
                 return RedirectToAction("Index");
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
@@ -155,6 +174,9 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditStatus([Bind(Include = "Id,TicketStatusId,Updated,Title,Description")] Ticket ticket)
         {
+
+            var oldTicket = db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
+
             if (ModelState.IsValid)
             {
                 ticket.Updated = DateTimeOffset.Now;
@@ -166,6 +188,8 @@ namespace BugTracker.Controllers
                 db.Entry(ticket).Property(p => p.Description).IsModified = false;
                 db.Entry(ticket).Property(p => p.Title).IsModified = false;
                 db.SaveChanges();
+
+                ticket.StatusChanges(oldTicket);
 
                 return RedirectToAction("Details", "Tickets", new { Id = ticket.Id });
             }
@@ -202,8 +226,10 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AssignDev([Bind(Include = "Id,Title,Description")] Ticket ticket, string Devs)
+        public async Task<ActionResult> AssignDev([Bind(Include = "Id,Title,Description,TicketTitleId,Created,TicketTypeId,TicketStatusId,TicketPriorityId,ProjectId")] Ticket ticket, string Devs)
         {
+            var oldTicket = db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
+
             if (ModelState.IsValid)
             {
                 ticket.Title = "foo";
@@ -216,6 +242,15 @@ namespace BugTracker.Controllers
                 db.Entry(ticket).Property(a => a.AssignedToUserId).IsModified = true;
                 db.Entry(ticket).Property(a => a.Title).IsModified = false;
                 db.Entry(ticket).Property(a => a.Description).IsModified = false;
+                db.Entry(ticket).Property(a => a.Created).IsModified = false;
+                db.Entry(ticket).Property(a => a.TicketTypeId).IsModified = false;
+                db.Entry(ticket).Property(a => a.Title).IsModified = false;
+                db.Entry(ticket).Property(a => a.TicketStatusId).IsModified = false;
+                db.Entry(ticket).Property(a => a.TicketPriorityId).IsModified = false;
+                db.Entry(ticket).Property(a => a.ProjectId).IsModified = false;
+
+                ticket.DevChanges(oldTicket);
+                await ticket.DeveloperAssignemt(oldTicket);
 
                 db.SaveChanges();
                 return RedirectToAction("Index");

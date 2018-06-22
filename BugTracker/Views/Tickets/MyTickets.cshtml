@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BugTracker.Models.Project>
+﻿@model IEnumerable<BugTracker.Models.Ticket>
 @using Microsoft.AspNet.Identity
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css" />
@@ -7,104 +7,90 @@
     ViewBag.Title = "MyTickets";
 }
 
-<h2>My Tickets</h2>
-
 <section id="widget-grid" class="">
     <div class="row">
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            @foreach (var proj in Model)
-            {
-                <div class="jarviswidget jarviswidget-color-blueDark" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-colorbutton="false">
-                    <header>
-                        <span class="widget-icon"> <i class="fa fa-ticket"></i> </span>
-                        <h2>@proj.Name</h2>
-                    </header>
-                    <div>
-                        <!-- widget content -->
-                        <div class="widget-body no-padding">
-                            <table @*id="dt_basic"*@ class="table @*table-striped table-bordered table-hover*@ @*dataTable*@" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            @Html.DisplayName("Title")
-                                        </th>
-                                        <th>
-                                            @Html.DisplayName("Priority Level")
-                                        </th>
-                                        <th>
-                                            @Html.DisplayName("Ticket Status")
-                                        </th>
-                                        <th>
-                                            @Html.DisplayName("Ticket Type")
-                                        </th>
-                                        <th>
-                                            @Html.DisplayName("Created On")
-                                        </th>
-                                        <th>
-                                            @Html.DisplayName("Developer")
-                                        </th>
-                                        <th>
-                                            @Html.DisplayName("Submitter")
-                                        </th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in proj.Tickets)
-                                    {
-                                        if ((User.IsInRole("Developer") && (item.AssignedToUserId == User.Identity.GetUserId())) ||
-                                (User.IsInRole("Submitter") && (item.OwnerUserId == User.Identity.GetUserId())) ||
-                                (User.IsInRole("Project Manager")) ||
-                                (User.IsInRole("Admin")))
-                                        {
+            <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-colorbutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-ticket"></i> </span>
+                    <h2>My Tickets</h2>
+                </header>
+                <div>
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+                    </div>
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body no-padding">
+                        <table id="dt_basic" class="table table-striped table-bordered table-hover dataTable" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Project")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Title")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Priority Level")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Ticket Status")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Ticket Type")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Created On")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Developer")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Submitter")
+                                    </th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model.Where(u => u.AssignedToUserId == User.Identity.GetUserId()))
+                            {
+                            <tbody>
+                                <tr>
+                                    <td class="tablelink">
+                                        <a> @Html.ActionLink(item.Project.Name, "Details", "Projects", new { id = item.Id }, new { Style = "color:Black;" }) </a>
+                                    </td>
 
-                                            <tr>
-                                                <td class="tablelink">
-                                                    <a> @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, new { Style = "color:Black;" }) </a>
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Created)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)
-                                                </td>
-                                                <td>
-                                                    @Html.ActionLink("Edit", "Edit", "Tickets", new { id = item.Id }, null) |
-                                                    @Html.ActionLink("Details", "Details", "Tickets", new { id = item.Id }, null) 
-                                                    @if (User.IsInRole("Project Manager") || User.IsInRole("Admin"))
-                                                    {
-                                                       @:| @Html.ActionLink("Add Developer", "AssignDev", "Tickets", new { id = item.Id }, null)
-                                                    }
-                                                </td>
-                                            </tr>
-
-                                        }
-
-                                    }
-                                </tbody>
-                            </table>
-
-                        </div>
+                                    <td class="tablelink">
+                                        <a> @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, new { Style = "color:Black;" }) </a>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)
+                                    </td>
+                                </tr>
+                            </tbody>
+                            }
+                        </table>
                     </div>
                 </div>
-            }
+            </div>
         </article>
     </div>
-
 </section>
-@*}*@
 @section scripts{
 
     <!-- BOOTSTRAP JS -->
@@ -156,30 +142,27 @@
                 phone: 480
             };
 
-            //$('.table').dataTable({
-            //    "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
-            //        "t" +
-            //        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-            //    "autoWidth": true,
-            //    "oLanguage": {
-            //        "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
-            //    },
-            //    "preDrawCallback": function () {
-            //        // Initialize the responsive datatables helper once.
-            //        if (!responsiveHelper_dt_basic) {
-            //            responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('.table'), breakpointDefinition);
-            //        }
-            //    },
-            //    "rowCallback": function (nRow) {
-            //        responsiveHelper_dt_basic.createExpandIcon(nRow);
-            //    },
-            //    "drawCallback": function (oSettings) {
-            //        responsiveHelper_dt_basic.respond();
-            //    }
-            //});
-
-
-            $('.table').dataTable();
+            $('#dt_basic').dataTable({
+                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+                    "t" +
+                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "autoWidth": true,
+                "oLanguage": {
+                    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+                },
+                "preDrawCallback": function () {
+                    // Initialize the responsive datatables helper once.
+                    if (!responsiveHelper_dt_basic) {
+                        responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_basic'), breakpointDefinition);
+                    }
+                },
+                "rowCallback": function (nRow) {
+                    responsiveHelper_dt_basic.createExpandIcon(nRow);
+                },
+                "drawCallback": function (oSettings) {
+                    responsiveHelper_dt_basic.respond();
+                }
+            });
 
             /* END BASIC */
 

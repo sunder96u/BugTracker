@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Extension_Methods;
 using BugTracker.Models;
 using BugTracker.Views;
 using Microsoft.AspNet.Identity;
@@ -56,6 +57,9 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,TicketId,FilePath,Description,Created,UserId")] TicketAttachment ticketAttachment, HttpPostedFileBase image)
         {
+
+            var oldTicketAttachment = db.TicketAttachments.AsNoTracking().FirstOrDefault(t => t.Id == ticketAttachment.TicketId);
+
             if (ModelState.IsValid)
             {
 
@@ -66,11 +70,18 @@ namespace BugTracker.Controllers
                     ticketAttachment.FilePath = "/FilesUploaded/" + fileName;
                 }
 
-
                 ticketAttachment.Created = DateTimeOffset.Now;
                 ticketAttachment.UserId = User.Identity.GetUserId();
+
+                ticketAttachment.User = db.Users.Find(ticketAttachment.UserId);
+                ticketAttachment.Ticket = db.Tickets.Find(ticketAttachment.TicketId);
+
                 db.TicketAttachments.Add(ticketAttachment);
                 db.SaveChanges();
+
+                ticketAttachment.AttachmentAdded( oldTicketAttachment);
+
+
                 var id = db.Tickets.Find(ticketAttachment.TicketId).Id;
                 return RedirectToAction("Details", "Tickets", new { Id = id });
                
@@ -104,10 +115,20 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,TicketId,FilePath,Description,Created,Updated,UserId")] TicketAttachment ticketAttachment)
         {
+
+            var oldTicketAttachment = db.TicketAttachments.AsNoTracking().FirstOrDefault(t => t.Id == ticketAttachment.Id);
+
             if (ModelState.IsValid)
             {
+
+                ticketAttachment.UserId = User.Identity.GetUserId();
+                db.TicketAttachments.Add(ticketAttachment);
+
                 db.Entry(ticketAttachment).State = EntityState.Modified;
                 db.SaveChanges();
+
+                ticketAttachment.AttachmentEditted(oldTicketAttachment);
+
                 return RedirectToAction("Index");
             }
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketAttachment.TicketId);

@@ -13,6 +13,7 @@ namespace BugTracker.Models
         public string OldValue { get; set; }
         public string NewValue { get; set; }
         public DateTimeOffset Changed { get; set; }
+        public string UserId { get; set; }
 
         //Navigational properties
         public virtual Ticket Ticket { get; set; }

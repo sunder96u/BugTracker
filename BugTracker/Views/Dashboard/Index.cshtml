@@ -1,0 +1,563 @@
+﻿@model BugTracker.ViewModels.DashboardVM
+@using BugTracker.Helpers
+@using Microsoft.AspNet.Identity
+
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="container-fluid">
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false">
+                    <!-- widget options:
+                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+                    data-widget-colorbutton="false"
+                    data-widget-editbutton="false"
+                    data-widget-togglebutton="false"
+                    data-widget-deletebutton="false"
+                    data-widget-fullscreenbutton="false"
+                    data-widget-custombutton="false"
+                    data-widget-collapsed="true"
+                    data-widget-sortable="false"
+                    -->
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
+                        <h2> Tickets's </h2>
+                        <!-- <div class="widget-toolbar">
+                        add: non-hidden - to disable auto hide
+                        </div>-->
+                    </header>
+                    <!-- widget div-->
+                    <div>
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <div>
+                                <label>Title:</label>
+                                <input type="text" />
+                            </div>
+                        </div>
+                        <!-- end widget edit box -->
+                        <div class="widget-body no-padding smart-form">
+                            <!-- content goes here -->
+                            @{ int count1 = 0;
+                                if (Model.TicketData.NotinProgressCount >= 5)
+                                { count1 = 5; }
+                                else if (Model.TicketData.NotinProgressCount < 5 && Model.TicketData.NotinProgressCount > 0)
+                                { count1 = 0 + Model.TicketData.NotinProgressCount; }
+
+                            }
+                            <h5 class="todo-group-title"><i class="fa fa-minus-circle"></i> Not In Progress Tickets (<small>Showing top @count1 out of @Model.TicketData.NotinProgressCount</small>)</h5>
+                            <ul class="todo">
+                                @foreach (var not in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Not in Progress"))
+                                {
+                                    var Created = not.Created.ToString().Split(' ');
+                                    <li>
+                                        <span class="handle">
+                                            <label class="checkbox">
+                                                <input type="checkbox" name="checkbox-inline">
+                                                <i></i>
+                                            </label>
+                                        </span>
+                                        <p>
+                                            <strong>Ticket #@not.Id</strong> | @not.Title (@not.TicketType.Name) | <strong>@not.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = not.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
+                                        </p>
+                                    </li>
+                                }
+                            </ul>
+                            @{ int count2 = 0;
+                                if (Model.TicketData.InProgressCount >= 5)
+                                { count2 = 5; }
+                                else if (Model.TicketData.InProgressCount < 5 && Model.TicketData.InProgressCount > 0)
+                                { count2 = 0 + Model.TicketData.InProgressCount; }
+
+                            }
+                            <h5 class="todo-group-title"><i class="fa fa-plus-circle"></i> In Progress Tickets (<small>Showing top @count2 out of @Model.TicketData.InProgressCount</small>)</h5>
+                            <ul class="todo">
+                                @foreach (var pro in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "In Progress"))
+                                {
+                                    var Created = pro.Created.ToString().Split(' ');
+                                    <li>
+                                        <span class="handle">
+                                            <label class="checkbox">
+                                                <input type="checkbox" name="checkbox-inline">
+                                                <i></i>
+                                            </label>
+                                        </span>
+                                        <p>
+                                            <strong>Ticket #@pro.Id</strong> | @pro.Title (@pro.TicketType.Name) | <strong>@pro.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = pro.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
+                                        </p>
+                                    </li>
+                                }
+                            </ul>
+                            @{ int count3 = 0;
+                                if (Model.TicketData.OnHoldCount >= 5)
+                                { count3 = 5; }
+                                else if (Model.TicketData.OnHoldCount < 5 && Model.TicketData.OnHoldCount > 0)
+                                { count3 = 0 + Model.TicketData.OnHoldCount; }
+
+                            }
+                            <h5 class="todo-group-title"><i class="fa fa-warning"></i> On Hold Tickets (<small>Showing top @count3 out of @Model.TicketData.OnHoldCount</small>)</h5>
+                            <ul class="todo">
+                                @foreach (var hold in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "On Hold"))
+                                {
+                                    var Created = hold.Created.ToString().Split(' ');
+                                    <li>
+                                        <span class="handle">
+                                            <label class="checkbox">
+                                                <input type="checkbox" name="checkbox-inline">
+                                                <i></i>
+                                            </label>
+                                        </span>
+                                        <p>
+                                            <strong>Ticket #@hold.Id</strong> | @hold.Title (@hold.TicketType.Name) | <strong>@hold.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = hold.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
+                                        </p>
+                                    </li>
+                                }
+                            </ul>
+                            @{ int count4 = 0;
+                                if (Model.TicketData.ResolvedCount >= 5)
+                                { count4 = 5; }
+                                else if (Model.TicketData.ResolvedCount < 5 && Model.TicketData.ResolvedCount > 0)
+                                { count4 = 0 + Model.TicketData.ResolvedCount; }
+
+                            }
+                            <h5 class="todo-group-title"><i class="fa fa-check"></i> Resolved Tickets (<small>Showing top @count4 out of @Model.TicketData.ResolvedCount</small>)</h5>
+                            <ul class="todo">
+                                @foreach (var solved in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Resolved"))
+                                {
+                                    var Created = solved.Created.ToString().Split(' ');
+                                    <li>
+                                        <span class="handle">
+                                            <label class="checkbox">
+                                                <input type="checkbox" name="checkbox-inline">
+                                                <i></i>
+                                            </label>
+                                        </span>
+                                        <p>
+                                            <strong>Ticket #@solved.Id</strong> | @solved.Title (@solved.TicketType.Name) | <strong>@solved.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = solved.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
+                                        </p>
+                                    </li>
+                                }
+                            </ul>
+                            @{ int count5 = 0;
+                                if (Model.TicketData.ClosedCount >= 5)
+                                { count5 = 5; }
+                                else if (Model.TicketData.ClosedCount < 5 && Model.TicketData.ClosedCount > 0)
+                                { count5 = 0 + Model.TicketData.ClosedCount; }
+
+                            }
+                            <h5 class="todo-group-title"><i class="fa fa-flag-checkered"></i> Closed Tickets (<small>Showing top @count5 out of @Model.TicketData.ClosedCount</small>)</h5>
+                            <ul class="todo">
+                                @foreach (var closed in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Closed"))
+                                {
+                                    var Created = closed.Created.ToString().Split(' ');
+                                    <li>
+                                        <span class="handle">
+                                            <label class="checkbox">
+                                                <input type="checkbox" name="checkbox-inline">
+                                                <i></i>
+                                            </label>
+                                        </span>
+                                        <p>
+                                            <strong>Ticket #@closed.Id</strong> | @closed.Title (@closed.TicketType.Name) | <strong>@closed.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = closed.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
+                                        </p>
+                                    </li>
+                                }
+                            </ul>
+
+                            <!-- end content -->
+                        </div>
+                    </div>
+                    <!-- end widget div -->
+                </div>
+                <!-- end widget -->
+            </div>
+            <!-- end row -->
+            <div class="col-md-6">
+                <div class="col-md-3">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-bell fa-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.TicketData.TicketNotificationsCount</div>
+                                    <div><h3>Notifications</h3></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Index","Projects")">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Index</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-list-alt fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.ProjectData.ProjectCount</div>
+                                    <div><h3>Total Projects</h3></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Index","Projects")">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Index</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-ticket fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.TicketData.TicketCount</div>
+                                    <div><h3>Total Tickets</h3></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Index","Projects")">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Index</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@Model.TicketData.TicketCommentCount</div>
+                                    <div><h3>Comments</h3></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Index","Projects")">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Index</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <article class="col-sm-12 col-md-12 col-lg-12">
+                        <!-- new widget -->
+                        <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-3" data-widget-colorbutton="false" data-widget-custombutton="false" data-widget-editbutton="false" data-widget-sortable="false">
+
+                            <!-- widget options:
+                            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                            data-widget-colorbutton="false"
+                            data-widget-editbutton="false"
+                            data-widget-togglebutton="false"
+                            data-widget-deletebutton="false"
+                            data-widget-fullscreenbutton="false"
+                            data-widget-custombutton="false"
+                            data-widget-collapsed="true"
+                            data-widget-sortable="false"
+
+                            -->
+                            <header>
+                                <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
+                                <h2> My Calendar </h2>
+                                <div class="widget-toolbar">
+                                    <!-- add: non-hidden - to disable auto hide -->
+                                </div>
+                            </header>
+                            <!-- widget div-->
+                            <div>
+                                <!-- widget edit box -->
+                                <div class="jarviswidget-editbox">
+                                    <input class="form-control" type="text">
+                                </div>
+                                <!-- end widget edit box -->
+                                <div class="widget-body no-padding">
+                                    <!-- content goes here -->
+                                    <div class="widget-body-toolbar">
+                                        <div id="calendar-buttons">
+                                            <div class="btn-group">
+                                                <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
+                                                <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="calendar"></div>
+                                    <!-- end content -->
+                                </div>
+                            </div>
+                            <!-- end widget div -->
+                        </div>
+                        <!-- end widget -->
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+@section scripts{
+
+    <!-- IMPORTANT: APP CONFIG -->
+    <script src="~/Template/js/app.config.js"></script>
+
+    <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
+    <script src="~/Template/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script>
+
+    <!-- BOOTSTRAP JS -->
+    <script src="~/Template/js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- JARVIS WIDGETS -->
+    <script src="~/Template/js/smartwidgets/jarvis.widget.min.js"></script>
+
+    <!--[if IE 8]>
+
+    <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+
+    <![endif]-->
+    <!-- SmartChat UI : plugin -->
+    <script src="~/Template/js/smart-chat-ui/smart.chat.ui.min.js"></script>
+    <script src="~/Template/js/smart-chat-ui/smart.chat.manager.min.js"></script>
+
+    <!-- Full Calendar -->
+    <script src="~/Template/js/plugin/moment/moment.min.js"></script>
+    <script src="~/Template/js/plugin/fullcalendar/fullcalendar.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            // DO NOT REMOVE : GLOBAL FUNCTIONS!
+            pageSetUp();
+
+            /*
+             * PAGE RELATED SCRIPTS
+             */
+
+            $(".js-status-update a").click(function () {
+                var selText = $(this).text();
+                var $this = $(this);
+                $this.parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
+                $this.parents('.dropdown-menu').find('li').removeClass('active');
+                $this.parent().addClass('active');
+            });
+
+            /*
+            * TODO: add a way to add more todo's to list
+            */
+
+            // initialize sortable
+            $(function () {
+                $("#sortable1, #sortable2").sortable({
+                    handle: '.handle',
+                    connectWith: ".todo",
+                    update: countTasks
+                }).disableSelection();
+            });
+
+            // check and uncheck
+            $('.todo .checkbox > input[type="checkbox"]').click(function () {
+                var $this = $(this).parent().parent().parent();
+
+                if ($(this).prop('checked')) {
+                    $this.addClass("complete");
+
+                    // remove this if you want to undo a check list once checked
+                    //$(this).attr("disabled", true);
+                    $(this).parent().hide();
+
+                    // once clicked - add class, copy to memory then remove and add to sortable3
+                    $this.slideUp(500, function () {
+                        $this.clone().prependTo("#sortable3").effect("highlight", {}, 800);
+                        $this.remove();
+                        countTasks();
+                    });
+                } else {
+                    // insert undo code here...
+                }
+
+            })
+            // count tasks
+            function countTasks() {
+
+                $('.todo-group-title').each(function () {
+                    var $this = $(this);
+                    $this.find(".num-of-tasks").text($this.next().find("li").size());
+                });
+
+            }
+
+            /*
+             * FULL CALENDAR JS
+             */
+
+            if ($("#calendar").length) {
+                var date = new Date();
+                var d = date.getDate();
+                var m = date.getMonth();
+                var y = date.getFullYear();
+
+                var calendar = $('#calendar').fullCalendar({
+
+                    editable: true,
+                    draggable: true,
+                    selectable: false,
+                    selectHelper: true,
+                    unselectAuto: false,
+                    disableResizing: false,
+                    height: "auto",
+
+                    header: {
+                        left: 'title', //,today
+                        center: 'prev, next, today',
+                        right: 'month, agendaWeek, agenDay' //month, agendaDay,
+                    },
+
+                    select: function (start, end, allDay) {
+                        var title = prompt('Event Title:');
+                        if (title) {
+                            calendar.fullCalendar('renderEvent', {
+                                title: title,
+                                start: start,
+                                end: end,
+                                allDay: allDay
+                            }, true // make the event "stick"
+                            );
+                        }
+                        calendar.fullCalendar('unselect');
+                    },
+
+                    eventRender: function (event, element, icon) {
+                        if (!event.description == "") {
+                            element.find('.fc-title').append("<br/><span class='ultra-light'>" + event.description + "</span>");
+                        }
+                        if (!event.icon == "") {
+                            element.find('.fc-title').append("<i class='air air-top-right fa " + event.icon + " '></i>");
+                        }
+                    }
+                });
+
+            };
+
+            /* hide default buttons */
+            $('.fc-toolbar .fc-right, .fc-toolbar .fc-center').hide();
+
+            // calendar prev
+            $('#calendar-buttons #btn-prev').click(function () {
+                $('.fc-prev-button').click();
+                return false;
+            });
+
+            // calendar next
+            $('#calendar-buttons #btn-next').click(function () {
+                $('.fc-next-button').click();
+                return false;
+            });
+
+            // calendar today
+            $('#calendar-buttons #btn-today').click(function () {
+                $('.fc-button-today').click();
+                return false;
+            });
+
+            // calendar month
+            $('#mt').click(function () {
+                $('#calendar').fullCalendar('changeView', 'month');
+            });
+
+            // calendar agenda week
+            $('#ag').click(function () {
+                $('#calendar').fullCalendar('changeView', 'agendaWeek');
+            });
+
+            // calendar agenda day
+            $('#td').click(function () {
+                $('#calendar').fullCalendar('changeView', 'agendaDay');
+            });
+
+            /*
+             * CHAT
+             */
+
+            $.filter_input = $('#filter-chat-list');
+            $.chat_users_container = $('#chat-container > .chat-list-body')
+            $.chat_users = $('#chat-users')
+            $.chat_list_btn = $('#chat-container > .chat-list-open-close');
+            $.chat_body = $('#chat-body');
+
+            /*
+            * LIST FILTER (CHAT)
+            */
+
+            // custom css expression for a case-insensitive contains()
+            jQuery.expr[':'].Contains = function (a, i, m) {
+                return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+            };
+
+            function listFilter(list) {// header is any element, list is an unordered list
+                // create and add the filter form to the header
+
+                $.filter_input.change(function () {
+                    var filter = $(this).val();
+                    if (filter) {
+                        // this finds all links in a list that contain the input,
+                        // and hide the ones not containing the input while showing the ones that do
+                        $.chat_users.find("a:not(:Contains(" + filter + "))").parent().slideUp();
+                        $.chat_users.find("a:Contains(" + filter + ")").parent().slideDown();
+                    } else {
+                        $.chat_users.find("li").slideDown();
+                    }
+                    return false;
+                }).keyup(function () {
+                    // fire the above change event after every letter
+                    $(this).change();
+
+                });
+
+            }
+
+            // on dom ready
+            listFilter($.chat_users);
+
+            // open chat list
+            $.chat_list_btn.click(function () {
+                $(this).parent('#chat-container').toggleClass('open');
+            })
+
+            $.chat_body.animate({
+                scrollTop: $.chat_body[0].scrollHeight
+            }, 500);
+
+        });
+
+    </script>
+
+}

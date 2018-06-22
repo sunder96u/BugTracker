@@ -11,7 +11,7 @@ namespace BugTracker.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }       
-        public string ProjectStatusId { get; set; }
+        public string ProjectStatsId { get; set; }
 
 
         //Navigational Properties
