@@ -22,6 +22,7 @@ namespace BugTracker.Models
         public string OwnerUserId { get; set; }
         public string AssignedToUserId { get; set; }
 
+
         // Navigational Properties
         // Ticket is the parent of 4 models
         // Ticket is the child of 6 models

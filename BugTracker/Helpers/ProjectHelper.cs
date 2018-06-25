@@ -61,6 +61,17 @@ namespace BugTracker.Helpers
             throw new NotImplementedException();
         }
 
+        public ICollection<Project> myProjects(string userId)
+        {
+            var Projects = new List<Project>();
+            foreach (var proj in ListUserProjects(userId))
+            {
+                Projects.AddRange(db.Projects.Where(t => t.Id == proj.Id).ToList());
+            }
+            return Projects;
+        }
+
+
         public ICollection<ApplicationUser> UsersOnProject(int projectId)
         {
             return db.Projects.Find(projectId).Users;

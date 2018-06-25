@@ -55,6 +55,14 @@ namespace BugTracker.ViewModels
         public int ClosedCount { get; set; }
         public int TicketCommentCount { get; set; }
         public int TicketNotificationsCount { get; set; }
+        public int TicketHistoryCount { get; set; }
+        public int TicketAttachmentCount { get; set; }
+        public int ImmediateCount { get; set; }
+        public int HighCount { get; set; }
+        public int MediumCount { get; set; }
+        public int LowCount { get; set; }
+        public int NoPriorityCount { get; set; }
+        public int IgnoreCount { get; set; }
     }
 
     public class ProjectDashboardData

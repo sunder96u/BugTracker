@@ -123,14 +123,21 @@
                                     <legend>Developer</legend>
                                     <div class="form-group">
                                         <div class="well">
-                                            <label>@Model.AssignedToUser.DisplayName</label>
-                                        </div>
+                                            @if(Model.AssignedToUserId == null)
+                                            {
+                                                <label></label>
+                                            }
+                                            @if(Model.AssignedToUser != null)
+                                            {
+                                                <label>@Model.AssignedToUser.DisplayName</label>
+                                            }
+                                            </div>
                                         <br />
                                         @if ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), Model.ProjectId))) || (User.IsInRole("Admin")))
                                         {
-                                        <button class="btn btn-primary">
-                                            @Html.ActionLink("Add/Change Dev", "AssignDev", "Tickets", new { id = Model.Id }, new { Style = "color:White;" })
-                                        </button>
+                                            <button class="btn btn-primary">
+                                                @Html.ActionLink("Add/Change Dev", "AssignDev", "Tickets", new { id = Model.Id }, new { Style = "color:White;" })
+                                            </button>
                                         }
                                     </div>
                                 </fieldset>
@@ -184,10 +191,10 @@
                                 <fieldset>
                                     <legend>Submitter</legend>
                                     <div class="form-group">
-                                        <div class="well">
-                                            <label>@Model.OwnerUser.DisplayName</label>
+                                            <div class="well">
+                                                <label>@Model.OwnerUser.DisplayName</label>
+                                            </div>
                                         </div>
-                                    </div>
                                 </fieldset>
                             </form>
 
@@ -304,6 +311,7 @@
                                     @{
                                         var created = Model.Created.ToString().Split(' ');
                                         var updated = Model.Updated.ToString().Split(' ');
+
                                     }
                                     <div class="col-md-2 col-md-offset-1 no-offset">
                                         <h3 class="no-offset">Date Created:</h3>
@@ -329,8 +337,8 @@
                             <div class="form-actions">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <button class="btn btn-default" type="button" onclick="window.history.back();">
-                                            Back
+                                        <button class="btn btn-default">
+                                            @Html.ActionLink("Back","Details","Projects",new { id = Model.ProjectId}, null)
                                         </button>
                                         @if ((User.IsInRole("Developer") && (Model.AssignedToUserId == User.Identity.GetUserId())) ||
                                         (User.IsInRole("Submitter") && (Model.OwnerUserId == User.Identity.GetUserId())) ||
@@ -422,17 +430,17 @@
                                                                 // I would like some sort of pop up that will allow the user to view the file to appear
 
                                                                 @*if (Path.GetExtension(attach.FilePath) == ".jpg")
-                                        {
-                                            <img class="img-responsive smlimage" src="~/Images/jpg.png" alt="jpg file" />
-                                        }
-                                        if (Path.GetExtension(attach.FilePath) == ".PNG")
-                                        {
-                                            <img class="img-responsive smlimage" src="~/Images/png.jpg" alt="jpg file" />
-                                        }
-                                        if (Path.GetExtension(attach.FilePath) == ".xls" || Path.GetExtension(attach.FilePath) == ".xlsx")
-                                        {
-                                            <img class="img-responsive smlimage" src="~/Images/.xls" alt="jpg file" />
-                                        }*@
+                                                                    {
+                                                                        <img class="img-responsive smlimage" src="~/Images/jpg.png" alt="jpg file" />
+                                                                    }
+                                                                    if (Path.GetExtension(attach.FilePath) == ".PNG")
+                                                                    {
+                                                                        <img class="img-responsive smlimage" src="~/Images/png.jpg" alt="jpg file" />
+                                                                    }
+                                                                    if (Path.GetExtension(attach.FilePath) == ".xls" || Path.GetExtension(attach.FilePath) == ".xlsx")
+                                                                    {
+                                                                        <img class="img-responsive smlimage" src="~/Images/.xls" alt="jpg file" />
+                                                                    }*@
                                                                 <a class="btn bg-color-darken txt-color-white" href="@attach.FilePath" download="@attach.FilePath.ToString().Split('/')[2]">@attach.FilePath.ToString().Split('/')[2]</a>
                                                                 <br />
                                                                 <img class="img-responsive" src="@attach.FilePath" alt="" height="400" width="400" />
@@ -529,7 +537,7 @@
                                                             </div>
                                                         </div>
                                                         <br />
-                                                        <br/>
+                                                        <br />
                                                         <br />
                                                         <div class="row">
                                                             <div class="col-md-12">
@@ -664,7 +672,7 @@
                                                             {
                                                                 @Html.AntiForgeryToken()
                                                                 @Html.Hidden("TicketId", Model.Id)
-                                                            
+
                                                                 <div class="form-group">
                                                                     <div class="col-md-12">
                                                                         @Html.TextArea("CommentBody", "", new { @class = "form-control", @value = "" })
@@ -714,78 +722,78 @@
                 <div class="modal-body">
 
 
-                            <!-- NEW WIDGET START -->
-                            <article class="col-sm-12 col-md-12 col-lg-12">
+                    <!-- NEW WIDGET START -->
+                    <article class="col-sm-12 col-md-12 col-lg-12">
 
-                                <!-- Widget ID (each widget will need unique ID)-->
-                                <div class="jarviswidget jarviswidget-color-blueDark" id="HistoryWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
-                                    <!-- widget options:
-                                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+                        <!-- Widget ID (each widget will need unique ID)-->
+                        <div class="jarviswidget jarviswidget-color-blueDark" id="HistoryWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                            <!-- widget options:
+                            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-                                    data-widget-colorbutton="false"
-                                    data-widget-editbutton="false"
-                                    data-widget-togglebutton="false"
-                                    data-widget-deletebutton="false"
-                                    data-widget-fullscreenbutton="false"
-                                    data-widget-custombutton="false"
-                                    data-widget-collapsed="true"
-                                    data-widget-sortable="false"
+                            data-widget-colorbutton="false"
+                            data-widget-editbutton="false"
+                            data-widget-togglebutton="false"
+                            data-widget-deletebutton="false"
+                            data-widget-fullscreenbutton="false"
+                            data-widget-custombutton="false"
+                            data-widget-collapsed="true"
+                            data-widget-sortable="false"
 
-                                    -->
-                                    <header>
-                                        <span class="widget-icon"> <i></i> </span>
-                                        <h2></h2>
+                            -->
+                            <header>
+                                <span class="widget-icon"> <i></i> </span>
+                                <h2></h2>
 
-                                    </header>
+                            </header>
 
-                                    <!-- widget div-->
-                                    <div>
+                            <!-- widget div-->
+                            <div>
 
-                                        <!-- widget edit box -->
-                                        <div class="jarviswidget-editbox">
-                                            <!-- This area used as dropdown edit box -->
+                                <!-- widget edit box -->
+                                <div class="jarviswidget-editbox">
+                                    <!-- This area used as dropdown edit box -->
 
-                                        </div>
-                                        <!-- end widget edit box -->
-                                        <!-- widget content -->
-                                        <div class="widget-body  no-overflow">
-
-
-                                            <fieldset>
-                                                @using (Html.BeginForm("Index", "TicketHistories", FormMethod.Post))
-                                                {
-                                                    foreach (var item in Model.TicketHistories.OrderByDescending(t => t.Changed))
-                                                    {
-
-                                                        var date = item.Changed.ToString().Split(' ');
-
-                                                        <div class="row ">
-                                                            <div class="col-md-6 well">
-                                                                <h4>Edited by:</h4><label> &#160;@item.User.DisplayName</label>
-                                                                <h4>Edited on:</h4><label> &#160;@date[0] &#64 @date[1]  @date[2]</label>
-                                                                <h4>Property Changed:</h4><label> &#160; @item.Property</label>
-
-                                                            </div>
-                                                            <div class="col-md-6 well" id="longer-well">
-
-                                                                <label>&#160; </label> <br />
-                                                                <h4>Old Value:</h4><label> &#160; @item.OldValue</label> <br />
-                                                                <h4>New Value:</h4><label> &#160; @item.NewValue</label> <br />
-                                                                <label>&#160; </label> <br />
-
-                                                            </div>
-                                                        </div>
-                                                        <br />
-                                                        <br />
-                                                    }
-                                                }
-                                            </fieldset>
-
-
-                                        </div>
-                                    </div>
                                 </div>
-                            </article>
+                                <!-- end widget edit box -->
+                                <!-- widget content -->
+                                <div class="widget-body  no-overflow">
+
+
+                                    <fieldset>
+                                        @using (Html.BeginForm("Index", "TicketHistories", FormMethod.Post))
+                                        {
+                                            foreach (var item in Model.TicketHistories.OrderByDescending(t => t.Changed))
+                                            {
+
+                                                var date = item.Changed.ToString().Split(' ');
+
+                                                <div class="row ">
+                                                    <div class="col-md-6 well">
+                                                        <h4>Edited by:</h4><label> &#160;@item.User.DisplayName</label>
+                                                        <h4>Edited on:</h4><label> &#160;@date[0] &#64 @date[1]  @date[2]</label>
+                                                        <h4>Property Changed:</h4><label> &#160; @item.Property</label>
+
+                                                    </div>
+                                                    <div class="col-md-6 well" id="longer-well">
+
+                                                        <label>&#160; </label> <br />
+                                                        <h4>Old Value:</h4><label> &#160; @item.OldValue</label> <br />
+                                                        <h4>New Value:</h4><label> &#160; @item.NewValue</label> <br />
+                                                        <label>&#160; </label> <br />
+
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <br />
+                                            }
+                                        }
+                                    </fieldset>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </article>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
@@ -793,19 +801,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <div id="Notification" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
@@ -816,65 +811,65 @@
                     <h4 class="modal-title" align="center">Ticket Notifications:</h4>
                 </div>
                 <div class="modal-body">
-                            <!-- NEW WIDGET START -->
-                            <article class="col-sm-12 col-md-12 col-lg-12">
+                    <!-- NEW WIDGET START -->
+                    <article class="col-sm-12 col-md-12 col-lg-12">
 
-                                <!-- Widget ID (each widget will need unique ID)-->
-                                <div class="jarviswidget jarviswidget-color-blueDark" id="NotificationWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
-                                    <!-- widget options:
-                                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+                        <!-- Widget ID (each widget will need unique ID)-->
+                        <div class="jarviswidget jarviswidget-color-blueDark" id="NotificationWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                            <!-- widget options:
+                            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-                                    data-widget-colorbutton="false"
-                                    data-widget-editbutton="false"
-                                    data-widget-togglebutton="false"
-                                    data-widget-deletebutton="false"
-                                    data-widget-fullscreenbutton="false"
-                                    data-widget-custombutton="false"
-                                    data-widget-collapsed="true"
-                                    data-widget-sortable="false"
+                            data-widget-colorbutton="false"
+                            data-widget-editbutton="false"
+                            data-widget-togglebutton="false"
+                            data-widget-deletebutton="false"
+                            data-widget-fullscreenbutton="false"
+                            data-widget-custombutton="false"
+                            data-widget-collapsed="true"
+                            data-widget-sortable="false"
 
-                                    -->
-                                    <header>
-                                        <span class="widget-icon"> <i></i> </span>
-                                        <h2></h2>
+                            -->
+                            <header>
+                                <span class="widget-icon"> <i></i> </span>
+                                <h2></h2>
 
-                                    </header>
+                            </header>
 
-                                    <!-- widget div-->
-                                    <div>
+                            <!-- widget div-->
+                            <div>
 
-                                        <!-- widget edit box -->
-                                        <div class="jarviswidget-editbox">
-                                            <!-- This area used as dropdown edit box -->
+                                <!-- widget edit box -->
+                                <div class="jarviswidget-editbox">
+                                    <!-- This area used as dropdown edit box -->
 
-                                        </div>
-                                        <!-- end widget edit box -->
-                                        <!-- widget content -->
-                                        <div class="widget-body no-overflow">
-
-
-                                            <fieldset>
-                                                @using (Html.BeginForm("Index", "TicketNotifications", FormMethod.Post))
-                                                {
-                                                    foreach (var item in Model.TicketNotifications.OrderByDescending(t => t.Id))
-                                                    {
-
-                                                        <div class="row well">
-                                                            <div class="col-md-12">
-                                                                @Html.Raw(item.Body)
-                                                            </div>
-                                                        </div>
-                                                        <br />
-                                                        <br />
-                                                    }
-                                                }
-                                            </fieldset>
-
-
-                                        </div>
-                                    </div>
                                 </div>
-                            </article>
+                                <!-- end widget edit box -->
+                                <!-- widget content -->
+                                <div class="widget-body no-overflow">
+
+
+                                    <fieldset>
+                                        @using (Html.BeginForm("Index", "TicketNotifications", FormMethod.Post))
+                                        {
+                                            foreach (var item in Model.TicketNotifications.OrderByDescending(t => t.Id))
+                                            {
+
+                                                <div class="row well">
+                                                    <div class="col-md-12">
+                                                        @Html.Raw(item.Body)
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <br />
+                                            }
+                                        }
+                                    </fieldset>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </article>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>

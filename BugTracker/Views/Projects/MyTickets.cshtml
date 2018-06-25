@@ -1,12 +1,13 @@
 ﻿@model IEnumerable<BugTracker.Models.Project>
 @using Microsoft.AspNet.Identity
+@using BugTracker.Helpers
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css" />
 
 @{
     ViewBag.Title = "MyTickets";
 }
-
+@{ var projhelper = new ProjectHelper();}
 <h2>My Tickets</h2>
 
 <section id="widget-grid" class="">
@@ -53,42 +54,46 @@
                                     @foreach (var item in proj.Tickets)
                                     {
                                         if ((User.IsInRole("Developer") && (item.AssignedToUserId == User.Identity.GetUserId())) ||
-                                (User.IsInRole("Submitter") && (item.OwnerUserId == User.Identity.GetUserId())) ||
-                                (User.IsInRole("Project Manager")) ||
-                                (User.IsInRole("Admin")))
+                                             (User.IsInRole("Submitter") && (item.OwnerUserId == User.Identity.GetUserId())) ||
+                                             (item.AssignedToUser == null && ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), item.ProjectId)))
+                                             || (User.IsInRole("Admin")))))
                                         {
 
-                                            <tr>
-                                                <td class="tablelink">
-                                                    <a> @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, new { Style = "color:Black;" }) </a>
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Created)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)
-                                                </td>
-                                                <td>
-                                                    @Html.ActionLink("Edit", "Edit", "Tickets", new { id = item.Id }, null) |
-                                                    @Html.ActionLink("Details", "Details", "Tickets", new { id = item.Id }, null) 
-                                                    @if (User.IsInRole("Project Manager") || User.IsInRole("Admin"))
-                                                    {
-                                                       @:| @Html.ActionLink("Add Developer", "AssignDev", "Tickets", new { id = item.Id }, null)
-                                                    }
-                                                </td>
-                                            </tr>
+                                    <tr>
+                                        <td class="tablelink">
+                                            <a> @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, new { Style = "color:Black;" }) </a>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                        </td>
+                                        <td>
+                                            @{ var created = item.Created.ToString().Split(' ');}
+                                            @created[0] @created[1] @created[2]
+                                        </td>
+                                        <td>
+                                            @if (item.AssignedToUser == null && ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), item.ProjectId))) || (User.IsInRole("Admin"))))
+                                            {
+                                                <a> @Html.ActionLink("Assign Developer", "AssignDev", "Tickets", new { id = item.Id }, null) </a>
+                                            }
+                                            @if (item.AssignedToUser != null)
+                                            {
+                                                @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", "Tickets", new { id = item.Id }, null) |
+                                            @Html.ActionLink("Details", "Details", "Tickets", new { id = item.Id }, null)
+                                        </td>
+                                    </tr>
 
                                         }
 

@@ -1,10 +1,13 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
+    @using  Microsoft.AspNet.Identity
+    @using BugTracker.Helpers
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css" />
 
 @{
     ViewBag.Title = "Index";
 }
+@{var projhelper = new ProjectHelper(); }
 
 <section id="widget-grid" class="">
     <div class="row">
@@ -72,10 +75,18 @@
                                             @Html.DisplayFor(modelItem => item.TicketType.Name)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Created)
+                                            @{ var created = item.Created.ToString().Split(' ');}
+                                            @created[0] @created[1] @created[2]
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
+                                            @if (item.AssignedToUser == null && ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), item.ProjectId))) || (User.IsInRole("Admin"))))
+                                            {
+                                                <a> @Html.ActionLink("Assign Developer", "AssignDev", "Tickets", new { id = item.Id }, null) </a>
+                                            }
+                                            @if (item.AssignedToUser != null)
+                                            {
+                                                @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
+                                            }
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)

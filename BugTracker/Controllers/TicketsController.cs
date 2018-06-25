@@ -49,11 +49,14 @@ namespace BugTracker.Controllers
         // GET: Tickets/Details/5
         public ActionResult Details(int id)
         {
-            var UsersOnProject = projectHelper.UsersOnProject(id).ToList();
+
             var projPMs = new List<ApplicationUser>();
 
 
             Ticket Ticket = db.Tickets.Find(id);
+            var projid = Ticket.ProjectId;
+            var UsersOnProject = projectHelper.UsersOnProject(projid).ToList();
+
             if (Ticket == null)
             {
                 return HttpNotFound();
@@ -202,10 +205,14 @@ namespace BugTracker.Controllers
         public ActionResult AssignDev(int id)
         {
 
-            var UsersOnProject = projectHelper.UsersOnProject(id).ToList();
+            //var UsersOnProject = db.Users.ToList();
             var projDevs = new List<ApplicationUser>();
 
             Ticket ticket = db.Tickets.Find(id);
+
+            var projId = ticket.ProjectId;
+            var UsersOnProject = projectHelper.UsersOnProject(projId).ToList();
+
             if (ticket == null)
             {
                 return HttpNotFound();
@@ -234,7 +241,14 @@ namespace BugTracker.Controllers
             {
                 ticket.Title = "foo";
                 ticket.Description = "foo";
-                ticket.TicketStatusId = 2;
+                if (ticket.TicketStatusId == 1)
+                {
+                    ticket.TicketStatusId = 2;
+                }
+                else
+                {
+                    ticket.TicketStatusId = ticket.TicketStatusId;
+                }
                 ticket.AssignedToUserId = Devs;
                 ticket.Updated = DateTimeOffset.Now;
                 db.Tickets.Attach(ticket);
@@ -245,7 +259,7 @@ namespace BugTracker.Controllers
                 db.Entry(ticket).Property(a => a.Created).IsModified = false;
                 db.Entry(ticket).Property(a => a.TicketTypeId).IsModified = false;
                 db.Entry(ticket).Property(a => a.Title).IsModified = false;
-                db.Entry(ticket).Property(a => a.TicketStatusId).IsModified = false;
+                db.Entry(ticket).Property(a => a.TicketStatusId).IsModified = true;
                 db.Entry(ticket).Property(a => a.TicketPriorityId).IsModified = false;
                 db.Entry(ticket).Property(a => a.ProjectId).IsModified = false;
 
@@ -253,7 +267,7 @@ namespace BugTracker.Controllers
                 await ticket.DeveloperAssignemt(oldTicket);
 
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Tickets", new { Id = ticket.Id });
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "DisplayName", ticket.AssignedToUserId);
 

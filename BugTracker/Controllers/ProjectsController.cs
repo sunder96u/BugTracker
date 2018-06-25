@@ -150,8 +150,14 @@ namespace BugTracker.Controllers
 
 
         // GET: Admin
-        public ActionResult AssignPMs()
+        public ActionResult AssignPMs(int id)
         {
+            Project project = db.Projects.Find(id);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+
             // 1. Setup a MultiSelectList to display all the Projects in our system
             ViewBag.Projects = new MultiSelectList(db.Projects, "Id", "Name");
 

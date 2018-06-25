@@ -15,260 +15,700 @@
         <!-- row -->
         <div class="row">
             <div class="col-md-6">
-                <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false">
-                    <!-- widget options:
-                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-                    data-widget-colorbutton="false"
-                    data-widget-editbutton="false"
-                    data-widget-togglebutton="false"
-                    data-widget-deletebutton="false"
-                    data-widget-fullscreenbutton="false"
-                    data-widget-custombutton="false"
-                    data-widget-collapsed="true"
-                    data-widget-sortable="false"
-                    -->
-                    <header>
-                        <span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
-                        <h2> Tickets's </h2>
-                        <!-- <div class="widget-toolbar">
-                        add: non-hidden - to disable auto hide
-                        </div>-->
-                    </header>
-                    <!-- widget div-->
-                    <div>
-                        <!-- widget edit box -->
-                        <div class="jarviswidget-editbox">
-                            <div>
-                                <label>Title:</label>
-                                <input type="text" />
+                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                {
+                    <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false">
+                        <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+                        data-widget-colorbutton="false"
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="false"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true"
+                        data-widget-sortable="false"
+                        -->
+                        <header>
+                            <span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
+                            <h2> Tickets </h2>
+                            <!-- <div class="widget-toolbar">
+                            add: non-hidden - to disable auto hide
+                            </div>-->
+                        </header>
+                        <!-- widget div-->
+                        <div>
+                            <div class="widget-body no-padding smart-form">
+                                <div class="tab-content">
+                                    <!-- content goes here -->
+                                    <div id="ex1" class="tab-pane fade in active">
+                                        <div class="container-fluid">
+                                            <div class="panel-group" id="accordion1">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex1">
+                                                                @{ int count = 0;
+                                                                    if (Model.TicketData.UnassignedTicketCount >= 5)
+                                                                    { count = 5; }
+                                                                    else if (Model.TicketData.UnassignedTicketCount < 5 && Model.TicketData.UnassignedTicketCount >= 0)
+                                                                    { count = 0 + Model.TicketData.UnassignedTicketCount; }
+
+                                                                }
+                                                                <i class="fa fa-exclamation"></i> Unassigned Tickets (<small class="num-of-tasks">Showing top @count out of @Model.TicketData.UnassignedTicketCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex1" class="panel-collapse collapse in">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Unassigned").Take(5))
+                                                                {
+                                                                    var Created = item.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item.Title</strong>  (@item.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item.ProjectId, @Style = "color:black;"})">@item.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex2">
+                                                                @{ int count1 = 0;
+                                                                    if (Model.TicketData.NotinProgressCount >= 5)
+                                                                    { count1 = 5; }
+                                                                    else if (Model.TicketData.NotinProgressCount < 5 && Model.TicketData.NotinProgressCount >= 0)
+                                                                    { count1 = 0 + Model.TicketData.NotinProgressCount; }
+
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> Not In Progress Tickets (<small class="num-of-tasks">Showing top @count1 out of @Model.TicketData.NotinProgressCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex2" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Not in Progress").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <small>Developer:</small> @item1.AssignedToUser.DisplayName  | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex3">
+                                                                @{ int count2 = 0;
+                                                                    if (Model.TicketData.InProgressCount >= 5)
+                                                                    { count2 = 5; }
+                                                                    else if (Model.TicketData.InProgressCount < 5 && Model.TicketData.InProgressCount >= 0)
+                                                                    { count2 = 0 + Model.TicketData.InProgressCount; }
+
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> In Progress Tickets (<small class="num-of-tasks">Showing top @count2 out of @Model.TicketData.InProgressCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex3" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "In Progress").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <small>Developer:</small> @item1.AssignedToUser.DisplayName  | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex4">
+                                                                @{ int count3 = 0;
+                                                                    if (Model.TicketData.OnHoldCount >= 5)
+                                                                    { count3 = 5; }
+                                                                    else if (Model.TicketData.OnHoldCount < 5 && Model.TicketData.OnHoldCount >= 0)
+                                                                    { count3 = 0 + Model.TicketData.OnHoldCount; }
+
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> On Hold Tickets (<small class="num-of-tasks">Showing top @count3 out of @Model.TicketData.OnHoldCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex4" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "On Hold").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <small>Developer:</small> @item1.AssignedToUser.DisplayName  | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex5">
+                                                                @{ int count4 = 0;
+                                                                    if (Model.TicketData.ResolvedCount >= 5)
+                                                                    { count4 = 5; }
+                                                                    else if (Model.TicketData.ResolvedCount < 5 && Model.TicketData.ResolvedCount >= 0)
+                                                                    { count4 = 0 + Model.TicketData.ResolvedCount; }
+
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> Resolved Tickets (<small class="num-of-tasks">Showing top @count4 out of @Model.TicketData.ResolvedCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex5" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Resolved").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <small>Developer:</small> @item1.AssignedToUser.DisplayName  | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex6">
+                                                                @{ int count5 = 0;
+                                                                    if (Model.TicketData.ClosedCount >= 5)
+                                                                    { count5 = 5; }
+                                                                    else if (Model.TicketData.ClosedCount < 5 && Model.TicketData.ClosedCount >= 0)
+                                                                    { count5 = count5 + Model.TicketData.ClosedCount; }
+
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> Closed Tickets (<small class="num-of-tasks">Showing top @count5 out of @Model.TicketData.ClosedCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex6" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Closed").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <small>Developer:</small> @item1.AssignedToUser.DisplayName  | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end content -->
                             </div>
                         </div>
-                        <!-- end widget edit box -->
-                        <div class="widget-body no-padding smart-form">
-                            <!-- content goes here -->
-                            @{ int count1 = 0;
-                                if (Model.TicketData.NotinProgressCount >= 5)
-                                { count1 = 5; }
-                                else if (Model.TicketData.NotinProgressCount < 5 && Model.TicketData.NotinProgressCount > 0)
-                                { count1 = 0 + Model.TicketData.NotinProgressCount; }
+                        <!-- end widget div -->
+                    </div>
+                }
+                @if (User.IsInRole("Developer") || User.IsInRole("Submitter"))
+                {
+                    <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false">
+                        <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+                        data-widget-colorbutton="false"
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="false"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true"
+                        data-widget-sortable="false"
+                        -->
+                        <header>
+                            <span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
+                            <h2> Tickets </h2>
+                            <!-- <div class="widget-toolbar">
+                            add: non-hidden - to disable auto hide
+                            </div>-->
+                        </header>
+                        <!-- widget div-->
+                        <div>
+                            <div class="widget-body no-padding smart-form">
+                                <div class="tab-content">
+                                    <!-- content goes here -->
+                                    <div id="ex1" class="tab-pane fade in active">
+                                        <div class="container-fluid">
+                                            <div class="panel-group" id="accordion1">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex1">
+                                                                @{ int count = 0;
+                                                                    if (Model.TicketData.ImmediateCount >= 5)
+                                                                    { count = 5; }
+                                                                    else if (Model.TicketData.ImmediateCount < 5 && Model.TicketData.ImmediateCount >= 0)
+                                                                    { count = 0 + Model.TicketData.ImmediateCount; }
 
-                            }
-                            <h5 class="todo-group-title"><i class="fa fa-minus-circle"></i> Not In Progress Tickets (<small>Showing top @count1 out of @Model.TicketData.NotinProgressCount</small>)</h5>
-                            <ul class="todo">
-                                @foreach (var not in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Not in Progress"))
-                                {
-                                    var Created = not.Created.ToString().Split(' ');
-                                    <li>
-                                        <span class="handle">
-                                            <label class="checkbox">
-                                                <input type="checkbox" name="checkbox-inline">
-                                                <i></i>
-                                            </label>
-                                        </span>
-                                        <p>
-                                            <strong>Ticket #@not.Id</strong> | @not.Title (@not.TicketType.Name) | <strong>@not.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = not.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
-                                        </p>
-                                    </li>
-                                }
-                            </ul>
-                            @{ int count2 = 0;
-                                if (Model.TicketData.InProgressCount >= 5)
-                                { count2 = 5; }
-                                else if (Model.TicketData.InProgressCount < 5 && Model.TicketData.InProgressCount > 0)
-                                { count2 = 0 + Model.TicketData.InProgressCount; }
+                                                                }
+                                                                <i class="fa fa-exclamation"></i> Immediate Priority Tickets (<small class="num-of-tasks">Showing top @count out of @Model.TicketData.ImmediateCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex1" class="panel-collapse collapse in">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item in Model.TableData.Tickets.Where(p => p.TicketPriority.Name == "Immediate").Take(5))
+                                                                {
+                                                                    var Created = item.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item.Title</strong>  (@item.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item.ProjectId, @Style = "color:black;"})">@item.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex2">
+                                                                @{ int count1 = 0;
+                                                                    if (Model.TicketData.HighCount >= 5)
+                                                                    { count1 = 5; }
+                                                                    else if (Model.TicketData.HighCount < 5 && Model.TicketData.HighCount >= 0)
+                                                                    { count1 = 0 + Model.TicketData.HighCount; }
 
-                            }
-                            <h5 class="todo-group-title"><i class="fa fa-plus-circle"></i> In Progress Tickets (<small>Showing top @count2 out of @Model.TicketData.InProgressCount</small>)</h5>
-                            <ul class="todo">
-                                @foreach (var pro in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "In Progress"))
-                                {
-                                    var Created = pro.Created.ToString().Split(' ');
-                                    <li>
-                                        <span class="handle">
-                                            <label class="checkbox">
-                                                <input type="checkbox" name="checkbox-inline">
-                                                <i></i>
-                                            </label>
-                                        </span>
-                                        <p>
-                                            <strong>Ticket #@pro.Id</strong> | @pro.Title (@pro.TicketType.Name) | <strong>@pro.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = pro.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
-                                        </p>
-                                    </li>
-                                }
-                            </ul>
-                            @{ int count3 = 0;
-                                if (Model.TicketData.OnHoldCount >= 5)
-                                { count3 = 5; }
-                                else if (Model.TicketData.OnHoldCount < 5 && Model.TicketData.OnHoldCount > 0)
-                                { count3 = 0 + Model.TicketData.OnHoldCount; }
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> High Priority Tickets (<small class="num-of-tasks">Showing top @count1 out of @Model.TicketData.HighCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex2" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketPriority.Name == "High").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex3">
+                                                                @{ int count2 = 0;
+                                                                    if (Model.TicketData.MediumCount >= 5)
+                                                                    { count2 = 5; }
+                                                                    else if (Model.TicketData.MediumCount < 5 && Model.TicketData.MediumCount >= 0)
+                                                                    { count2 = 0 + Model.TicketData.MediumCount; }
 
-                            }
-                            <h5 class="todo-group-title"><i class="fa fa-warning"></i> On Hold Tickets (<small>Showing top @count3 out of @Model.TicketData.OnHoldCount</small>)</h5>
-                            <ul class="todo">
-                                @foreach (var hold in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "On Hold"))
-                                {
-                                    var Created = hold.Created.ToString().Split(' ');
-                                    <li>
-                                        <span class="handle">
-                                            <label class="checkbox">
-                                                <input type="checkbox" name="checkbox-inline">
-                                                <i></i>
-                                            </label>
-                                        </span>
-                                        <p>
-                                            <strong>Ticket #@hold.Id</strong> | @hold.Title (@hold.TicketType.Name) | <strong>@hold.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = hold.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
-                                        </p>
-                                    </li>
-                                }
-                            </ul>
-                            @{ int count4 = 0;
-                                if (Model.TicketData.ResolvedCount >= 5)
-                                { count4 = 5; }
-                                else if (Model.TicketData.ResolvedCount < 5 && Model.TicketData.ResolvedCount > 0)
-                                { count4 = 0 + Model.TicketData.ResolvedCount; }
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> Medium Priority Tickets (<small class="num-of-tasks">Showing top @count2 out of @Model.TicketData.MediumCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex3" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketPriority.Name == "Medium").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex4">
+                                                                @{ int count3 = 0;
+                                                                    if (Model.TicketData.LowCount >= 5)
+                                                                    { count3 = 5; }
+                                                                    else if (Model.TicketData.LowCount < 5 && Model.TicketData.LowCount >= 0)
+                                                                    { count3 = 0 + Model.TicketData.LowCount; }
 
-                            }
-                            <h5 class="todo-group-title"><i class="fa fa-check"></i> Resolved Tickets (<small>Showing top @count4 out of @Model.TicketData.ResolvedCount</small>)</h5>
-                            <ul class="todo">
-                                @foreach (var solved in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Resolved"))
-                                {
-                                    var Created = solved.Created.ToString().Split(' ');
-                                    <li>
-                                        <span class="handle">
-                                            <label class="checkbox">
-                                                <input type="checkbox" name="checkbox-inline">
-                                                <i></i>
-                                            </label>
-                                        </span>
-                                        <p>
-                                            <strong>Ticket #@solved.Id</strong> | @solved.Title (@solved.TicketType.Name) | <strong>@solved.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = solved.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
-                                        </p>
-                                    </li>
-                                }
-                            </ul>
-                            @{ int count5 = 0;
-                                if (Model.TicketData.ClosedCount >= 5)
-                                { count5 = 5; }
-                                else if (Model.TicketData.ClosedCount < 5 && Model.TicketData.ClosedCount > 0)
-                                { count5 = 0 + Model.TicketData.ClosedCount; }
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> Low Priority Tickets (<small class="num-of-tasks">Showing top @count3 out of @Model.TicketData.LowCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex4" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketPriority.Name == "Low").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex5">
+                                                                @{ int count4 = 0;
+                                                                    if (Model.TicketData.NoPriorityCount >= 5)
+                                                                    { count4 = 5; }
+                                                                    else if (Model.TicketData.NoPriorityCount < 5 && Model.TicketData.NoPriorityCount >= 0)
+                                                                    { count4 = 0 + Model.TicketData.NoPriorityCount; }
 
-                            }
-                            <h5 class="todo-group-title"><i class="fa fa-flag-checkered"></i> Closed Tickets (<small>Showing top @count5 out of @Model.TicketData.ClosedCount</small>)</h5>
-                            <ul class="todo">
-                                @foreach (var closed in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Closed"))
-                                {
-                                    var Created = closed.Created.ToString().Split(' ');
-                                    <li>
-                                        <span class="handle">
-                                            <label class="checkbox">
-                                                <input type="checkbox" name="checkbox-inline">
-                                                <i></i>
-                                            </label>
-                                        </span>
-                                        <p>
-                                            <strong>Ticket #@closed.Id</strong> | @closed.Title (@closed.TicketType.Name) | <strong>@closed.Project.Name</strong> [<a href="@Url.Action("Details","Ticket",new { id = closed.Id })" class="FontBig">More Details</a>] <span class="date">@Created[0]</span>
-                                        </p>
-                                    </li>
-                                }
-                            </ul>
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> No Priority Tickets (<small class="num-of-tasks">Showing top @count4 out of @Model.TicketData.NoPriorityCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex5" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketPriority.Name == "No Priority").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h5 class="panel-title todo-group-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapse1ex6">
+                                                                @{ int count5 = 0;
+                                                                    if (Model.TicketData.IgnoreCount >= 5)
+                                                                    { count5 = 5; }
+                                                                    else if (Model.TicketData.IgnoreCount < 5 && Model.TicketData.IgnoreCount >= 0)
+                                                                    { count5 = count5 + Model.TicketData.IgnoreCount; }
 
-                            <!-- end content -->
+                                                                }
+                                                                <i class="fa fa-minus-circle"></i> Ignore Tickets (<small class="num-of-tasks">Showing top @count5 out of @Model.TicketData.IgnoreCount</small>)
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapse1ex6" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <ul class="todo">
+                                                                @foreach (var item1 in Model.TableData.Tickets.Where(p => p.TicketPriority.Name == "Ignore").Take(5))
+                                                                {
+                                                                    var Created = item1.Created.ToString().Split(' ');
+                                                                    <li>
+                                                                        <span class="handle">
+                                                                            <label class="checkbox">
+                                                                                <input type="checkbox" name="checkbox-inline">
+                                                                                <i></i>
+                                                                            </label>
+                                                                        </span>
+                                                                        <p>
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <span class="date">@Created[0]</span>
+                                                                        </p>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end content -->
+                            </div>
+                        </div>
+                        <!-- end widget div -->
+                    </div>
+                }
+                <!-- end widget -->
+                <div class="row">
+                    <div class="col-md-5 col-md-offset-1">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <i class="fa fa-bell fa-4x"></i>
+                                    </div>
+                                    <div class="col-xs-10 text-right">
+                                        <div class="huge">@Model.TicketData.TicketNotificationsCount</div>
+                                        <div><h3>Ticket Notifications</h3></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a data-toggle="modal" data-target="#Notification">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Index</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                    <!-- end widget div -->
+                    <div class="col-md-5">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-history fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@Model.TicketData.TicketHistoryCount</div>
+                                        <div><h3>Ticket History</h3></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a data-toggle="modal" data-target="#History">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Index</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <!-- end widget -->
+                <div class="row">
+                    <div class="col-md-5 col-md-offset-1">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-comments fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@Model.TicketData.TicketCommentCount</div>
+                                        <div><h3>Ticket Comments</h3></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a data-toggle="modal" data-target="#Comments">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Index</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-share-square-o fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@Model.TicketData.TicketAttachmentCount</div>
+                                        <div><h3>Ticket Attachments</h3></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a data-toggle="modal" data-target="#Attachments">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Index</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- end row -->
             <div class="col-md-6">
-                <div class="col-md-3">
-                    <div class="panel panel-danger">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-bell fa-4x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">@Model.TicketData.TicketNotificationsCount</div>
-                                    <div><h3>Notifications</h3></div>
+                <div class="row">
+                    <br />
+                    <br />
+                    <br />
+                    <div class="col-md-5 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-list-alt fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@Model.ProjectData.ProjectCount</div>
+                                        <div><h3>Total Projects</h3></div>
+                                    </div>
                                 </div>
                             </div>
+                            <a href="@Url.Action("MyProjects","Projects")">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Index</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
                         </div>
-                        <a href="@Url.Action("Index","Projects")">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Index</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-ticket fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@Model.TicketData.TicketCount</div>
+                                        <div><h3>Total Tickets</h3></div>
+                                    </div>
+                                </div>
                             </div>
-                        </a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                            {
+                                <a href="@Url.Action("MyProjectTickets","Projects", null)">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">View Index</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            }
+                            @if (User.IsInRole("Developer") || User.IsInRole("Submitter"))
+                            {
+                                <a href="@Url.Action("MyTickets", "Tickets")">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">View Index</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-list-alt fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">@Model.ProjectData.ProjectCount</div>
-                                    <div><h3>Total Projects</h3></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="@Url.Action("Index","Projects")">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Index</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-ticket fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">@Model.TicketData.TicketCount</div>
-                                    <div><h3>Total Tickets</h3></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="@Url.Action("Index","Projects")">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Index</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-comments fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">@Model.TicketData.TicketCommentCount</div>
-                                    <div><h3>Comments</h3></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="@Url.Action("Index","Projects")">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Index</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                <br />
+                <br />
                 <div class="row">
 
                     <article class="col-sm-12 col-md-12 col-lg-12">
@@ -323,18 +763,380 @@
                 </div>
             </div>
         </div>
+
+        <!--Modals for history and notifications-->
+        <div id="History" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" align="center">Ticket History:</h4>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <!-- NEW WIDGET START -->
+                        <article class="col-sm-12 col-md-12 col-lg-12">
+
+                            <!-- Widget ID (each widget will need unique ID)-->
+                            <div class="jarviswidget jarviswidget-color-blueDark" id="HistoryWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                                <!-- widget options:
+                                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                                data-widget-colorbutton="false"
+                                data-widget-editbutton="false"
+                                data-widget-togglebutton="false"
+                                data-widget-deletebutton="false"
+                                data-widget-fullscreenbutton="false"
+                                data-widget-custombutton="false"
+                                data-widget-collapsed="true"
+                                data-widget-sortable="false"
+
+                                -->
+                                <header>
+                                    <span class="widget-icon"> <i></i> </span>
+                                    <h2></h2>
+
+                                </header>
+
+                                <!-- widget div-->
+                                <div>
+
+                                    <!-- widget edit box -->
+                                    <div class="jarviswidget-editbox">
+                                        <!-- This area used as dropdown edit box -->
+
+                                    </div>
+                                    <!-- end widget edit box -->
+                                    <!-- widget content -->
+                                    <div class="widget-body  no-overflow">
+
+
+                                        <fieldset>
+                                            @using (Html.BeginForm("Index", "TicketHistories", FormMethod.Get))
+                                            {
+                                                foreach (var item in Model.TableData.TicketsHistories.OrderByDescending(t => t.Changed))
+                                                {
+
+                                                    var date = item.Changed.ToString().Split(' ');
+
+                                                    <div class="row">
+                                                        <div class="col-md-12 well">
+                                                            <h4>Project Name:</h4><label>  &#160; <strong>@item.Ticket.Project.Name</strong></label>
+                                                            <h4>Ticket Title:</h4><label>  &#160; <strong>@item.Ticket.Title</strong></label>
+                                                        </div>
+                                                        <div class="col-md-6 well">
+                                                            <h4>Edited by:</h4><label> &#160;@item.User.DisplayName</label>
+                                                            <h4>Edited on:</h4><label> &#160;@date[0] &#64 @date[1]  @date[2]</label>
+                                                            <h4>Property Changed:</h4><label> &#160; @item.Property</label>
+
+                                                        </div>
+                                                        <div class="col-md-6 well" id="longer-well">
+
+                                                            <label>&#160; </label> <br />
+                                                            <h4>Old Value:</h4><label> &#160; @item.OldValue</label> <br />
+                                                            <h4>New Value:</h4><label> &#160; @item.NewValue</label> <br />
+                                                            <label>&#160; </label> <br />
+
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <br />
+                                                }
+                                            }
+                                        </fieldset>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="Notification" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" align="center">Ticket Notifications:</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- NEW WIDGET START -->
+                        <article class="col-sm-12 col-md-12 col-lg-12">
+
+                            <!-- Widget ID (each widget will need unique ID)-->
+                            <div class="jarviswidget jarviswidget-color-blueDark" id="NotificationWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                                <!-- widget options:
+                                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                                data-widget-colorbutton="false"
+                                data-widget-editbutton="false"
+                                data-widget-togglebutton="false"
+                                data-widget-deletebutton="false"
+                                data-widget-fullscreenbutton="false"
+                                data-widget-custombutton="false"
+                                data-widget-collapsed="true"
+                                data-widget-sortable="false"
+
+                                -->
+                                <header>
+                                    <span class="widget-icon"> <i></i> </span>
+                                    <h2></h2>
+
+                                </header>
+
+                                <!-- widget div-->
+                                <div>
+
+                                    <!-- widget edit box -->
+                                    <div class="jarviswidget-editbox">
+                                        <!-- This area used as dropdown edit box -->
+
+                                    </div>
+                                    <!-- end widget edit box -->
+                                    <!-- widget content -->
+                                    <div class="widget-body no-overflow">
+
+
+                                        <fieldset>
+                                            @using (Html.BeginForm("Index", "TicketNotifications", FormMethod.Post))
+                                            {
+                                                foreach (var item in Model.TableData.TicketNotifications.OrderByDescending(t => t.Id))
+                                                {
+
+                                                    <div class="row well">
+                                                        <div class="col-md-12">
+                                                            @Html.Raw(item.Body)
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <br />
+                                                }
+                                            }
+                                        </fieldset>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="Comments" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" align="center">Ticket Comments:</h4>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <!-- NEW WIDGET START -->
+                        <article class="col-sm-12 col-md-12 col-lg-12">
+
+                            <!-- Widget ID (each widget will need unique ID)-->
+                            <div class="jarviswidget jarviswidget-color-blueDark" id="CommentWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                                <!-- widget options:
+                                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                                data-widget-colorbutton="false"
+                                data-widget-editbutton="false"
+                                data-widget-togglebutton="false"
+                                data-widget-deletebutton="false"
+                                data-widget-fullscreenbutton="false"
+                                data-widget-custombutton="false"
+                                data-widget-collapsed="true"
+                                data-widget-sortable="false"
+
+                                -->
+                                <header>
+                                    <span class="widget-icon"> <i></i> </span>
+                                    <h2></h2>
+
+                                </header>
+
+                                <!-- widget div-->
+                                <div>
+
+                                    <!-- widget edit box -->
+                                    <div class="jarviswidget-editbox">
+                                        <!-- This area used as dropdown edit box -->
+
+                                    </div>
+                                    <!-- end widget edit box -->
+                                    <!-- widget content -->
+                                    <div class="widget-body  no-overflow">
+
+
+                                        <fieldset>
+                                            @using (Html.BeginForm("Index", "TicketHistories", FormMethod.Post))
+                                            {
+                                                foreach (var comment in Model.TableData.TicketsComments.OrderByDescending(p => p.Created))
+                                                {
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div class="blog-post-content">
+
+                                                                @{
+                                                                    var comdateArray = comment.Created.ToString().Split(' ');
+                                                                }
+                                                                <div class="row">
+                                                                    <span class="blog-post-data pull-left">  &#160;Project Name: <strong>@comment.Ticket.Project.Name</strong></span>
+                                                                    <span class="blog-post-data pull-right"> &#160;Ticket Title: <strong>@comment.Ticket.Title</strong></span>
+                                                                </div>
+                                                                <span class="blog-post-date pull-left">Created By: @comment.User.DisplayName</span>
+                                                                <span class="blog-post-date pull-right"> @comdateArray[0] &#64; @comdateArray[1] @comdateArray[2]</span>
+                                                                <br />
+                                                                <br />
+                                                                <div class="well">
+                                                                    <p>@Html.Raw(comment.CommentBody)</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </fieldset>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="Attachments" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" align="center">Ticket Attachments:</h4>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <!-- NEW WIDGET START -->
+                        <article class="col-sm-12 col-md-12 col-lg-12">
+
+                            <!-- Widget ID (each widget will need unique ID)-->
+                            <div class="jarviswidget jarviswidget-color-blueDark" id="AttachWid" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                                <!-- widget options:
+                                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                                data-widget-colorbutton="false"
+                                data-widget-editbutton="false"
+                                data-widget-togglebutton="false"
+                                data-widget-deletebutton="false"
+                                data-widget-fullscreenbutton="false"
+                                data-widget-custombutton="false"
+                                data-widget-collapsed="true"
+                                data-widget-sortable="false"
+
+                                -->
+                                <header>
+                                    <span class="widget-icon"> <i></i> </span>
+                                    <h2></h2>
+
+                                </header>
+
+                                <!-- widget div-->
+                                <div>
+
+                                    <!-- widget edit box -->
+                                    <div class="jarviswidget-editbox">
+                                        <!-- This area used as dropdown edit box -->
+
+                                    </div>
+                                    <!-- end widget edit box -->
+                                    <!-- widget content -->
+                                    <div class="widget-body  no-overflow">
+
+
+                                        <fieldset>
+                                            @using (Html.BeginForm("Index", "TicketAttachments", FormMethod.Post))
+                                            {
+                                                foreach (var item in Model.TableData.TicketAttachments.OrderByDescending(t => t.Created))
+                                                {
+
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div class="blog-post-content">
+
+                                                                @{
+                                                                    var comdateArray = item.Created.ToString().Split(' ');
+                                                                }
+                                                                <div class="row">
+                                                                    <span class="blog-post-data pull-left">  &#160;Project Name: <strong>@item.Ticket.Project.Name</strong></span>
+                                                                    <span class="blog-post-data pull-right"> &#160;Ticket Title: <strong>@item.Ticket.Title</strong></span>
+                                                                </div>
+                                                                <span class="blog-post-date pull-left">Created By: @item.User.DisplayName</span>
+                                                                <span class="blog-post-date pull-right"> @comdateArray[0] &#64; @comdateArray[1] @comdateArray[2]</span>
+                                                                <br />
+                                                                <br />
+                                                                <div class="well">
+                                                                    @if (item.FilePath != null)
+                                                                    {
+                                                                        <a class="btn bg-color-darken txt-color-white" href="@item.FilePath" download="@item.FilePath.ToString().Split('/')[2]">@item.FilePath.ToString().Split('/')[2]</a>
+                                                                        <br />
+                                                                        <img class="img-responsive" src="@item.FilePath" alt="" height="400" width="400" />
+                                                                        <br />
+                                                                    }
+                                                                    <p>@Html.Raw(item.Description)</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <br />
+                                                }
+                                            }
+                                        </fieldset>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 @section scripts{
 
+
+
     <!-- IMPORTANT: APP CONFIG -->
     <script src="~/Template/js/app.config.js"></script>
 
-    <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
-    <script src="~/Template/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script>
-
-    <!-- BOOTSTRAP JS -->
-    <script src="~/Template/js/bootstrap/bootstrap.min.js"></script>
+    @*BOOTSTRAP JS
+        <script src="~/Template/js/bootstrap/bootstrap.min.js"></script>*@
 
     <!-- JARVIS WIDGETS -->
     <script src="~/Template/js/smartwidgets/jarvis.widget.min.js"></script>
@@ -344,9 +1146,8 @@
     <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
 
     <![endif]-->
-    <!-- SmartChat UI : plugin -->
-    <script src="~/Template/js/smart-chat-ui/smart.chat.ui.min.js"></script>
-    <script src="~/Template/js/smart-chat-ui/smart.chat.manager.min.js"></script>
+    <!-- MAIN APP JS FILE -->
+    @*<script src="~/Template/js/app.min.js"></script>*@
 
     <!-- Full Calendar -->
     <script src="~/Template/js/plugin/moment/moment.min.js"></script>
@@ -362,58 +1163,60 @@
              * PAGE RELATED SCRIPTS
              */
 
-            $(".js-status-update a").click(function () {
-                var selText = $(this).text();
-                var $this = $(this);
-                $this.parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
-                $this.parents('.dropdown-menu').find('li').removeClass('active');
-                $this.parent().addClass('active');
-            });
+            //$(".js-status-update a").click(function () {
+            //    var selText = $(this).text();
+            //    var $this = $(this);
+            //    $this.parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
+            //    $this.parents('.dropdown-menu').find('li').removeClass('active');
+            //    $this.parent().addClass('active');
+            //});
 
             /*
             * TODO: add a way to add more todo's to list
             */
 
-            // initialize sortable
-            $(function () {
-                $("#sortable1, #sortable2").sortable({
-                    handle: '.handle',
-                    connectWith: ".todo",
-                    update: countTasks
-                }).disableSelection();
-            });
+            //// initialize sortable
+            //$(function () {
+            //    $("#sortable1, #sortable2").sortable({
+            //        handle: '.handle',
+            //        connectWith: ".todo",
+            //        update: countTasks
+            //    }).disableSelection();
+            //});
 
-            // check and uncheck
-            $('.todo .checkbox > input[type="checkbox"]').click(function () {
-                var $this = $(this).parent().parent().parent();
+            //// check and uncheck
+            //$('.todo .checkbox > input[type="checkbox"]').click(function () {
+            //    var $this = $(this).parent().parent().parent();
 
-                if ($(this).prop('checked')) {
-                    $this.addClass("complete");
+            //    if ($(this).prop('checked')) {
+            //        //$this.addClass("complete");
 
-                    // remove this if you want to undo a check list once checked
-                    //$(this).attr("disabled", true);
-                    $(this).parent().hide();
+            //        // remove this if you want to undo a check list once checked
+            //        //$(this).attr("disabled", true);
+            //        //$(this).parent().hide();
 
-                    // once clicked - add class, copy to memory then remove and add to sortable3
-                    $this.slideUp(500, function () {
-                        $this.clone().prependTo("#sortable3").effect("highlight", {}, 800);
-                        $this.remove();
-                        countTasks();
-                    });
-                } else {
-                    // insert undo code here...
-                }
+            //        // once clicked - add class, copy to memory then remove and add to sortable3
+            //        $this.slideUp(500, function () {
+            //            $this.clone().prependTo("#sortable3").effect("highlight", {}, 800);
+            //            $this.remove();
+            //            countTasks();
+            //        });
+            //    } else {
+            //        // insert undo code here...
+            //    }
 
-            })
-            // count tasks
-            function countTasks() {
+            //    // count tasks
+            //    function countTasks() {
 
-                $('.todo-group-title').each(function () {
-                    var $this = $(this);
-                    $this.find(".num-of-tasks").text($this.next().find("li").size());
-                });
+            //        $('.todo-group-title').each(function () {
+            //            var $this = $(this);
+            //            $this.find(".num-of-tasks").text($this.next().find("li").size());
+            //        });
 
-            }
+            //    }
+
+            //})
+
 
             /*
              * FULL CALENDAR JS

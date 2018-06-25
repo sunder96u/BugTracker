@@ -59,6 +59,44 @@
             }
         </section>
     </div>
+    <div class="col-md-4 col-md-offset-4 well login-page">
+        <h2>Use the Demo Users to test what the functionality of each role is:</h2>
+        <section id="loginForm2">
+            <br />
+            <div class="col-sm-offset-2">
+                @using (Html.BeginForm("DemoLogin", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("Email", "stevenunderwood2@hotmail.com")
+                    @Html.Hidden("Password", "Abc123!")
+                    <button type="submit" class="btn btn-default">Login as Demo Administrator</button>
+                }
+                @using (Html.BeginForm("DemoLogin", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("Email", "ProjectManager@Mailinator.com")
+                    @Html.Hidden("Password", "Abc123!")
+                    <button type="submit" class="btn btn-default">Login as Demo Project Manager</button>
+                }
+            </div>
+            <div class="col-sm-offset-2">
+                @using (Html.BeginForm("DemoLogin", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("Email", "Dev@Mailinator.com")
+                    @Html.Hidden("Password", "Abc123!")
+                    <button type="submit" class="btn btn-default">Login as Demo Developer</button>
+                }
+                @using (Html.BeginForm("DemoLogin", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("Email", "Submitter@mailinator.com")
+                    @Html.Hidden("Password", "Abc123!")
+                    <button type="submit" class="btn btn-default">Login as Demo Submitter</button>
+                }
+            </div>
+        </section>
+    </div>
     @*<div class="col-md-4">
             <section id="socialLoginForm">
                 @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
