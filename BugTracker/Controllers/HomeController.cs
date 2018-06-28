@@ -16,6 +16,16 @@ namespace BugTracker.Controllers
             return View();
         }
 
+        public ActionResult Error404()
+        {
+            return View();
+        }
+
+        public ActionResult Error500()
+        {
+            return View();
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -32,7 +42,7 @@ namespace BugTracker.Controllers
 
         public ActionResult Oops()
         {
-            if(TempData["oopsMsg"] != null)
+            if (TempData["oopsMsg"] != null)
             {
                 ViewBag.OopsMsg = TempData["oopsMsg"].ToString();
             }
@@ -49,6 +59,15 @@ namespace BugTracker.Controllers
         }
 
         public ActionResult Oops3()
+        {
+            if (TempData["oopsMsg"] != null)
+            {
+                ViewBag.OopsMsg = TempData["oopsMsg"].ToString();
+            }
+            return View();
+        }
+
+        public ActionResult Oops4()
         {
             if (TempData["oopsMsg"] != null)
             {

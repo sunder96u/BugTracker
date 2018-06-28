@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Action_Filters;
 using BugTracker.Helpers;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
@@ -20,12 +21,6 @@ namespace BugTracker.Controllers
         private UserRolesHelper rolesHelper = new UserRolesHelper();
         private ProjectHelper projectHelper = new ProjectHelper();
         private TicketHelper ticketHelper = new TicketHelper();
-
-        // GET: Projects
-        public ActionResult Index()
-        {
-            return View(db.Projects.ToList());
-        }
 
         //Get:
         public ActionResult MyProjects()
@@ -43,6 +38,7 @@ namespace BugTracker.Controllers
         }
 
         //Get:
+        [Admin_PMAuthorization]
         public ActionResult AllProjects()
         {
             return View(db.Projects.ToList());
@@ -82,12 +78,13 @@ namespace BugTracker.Controllers
         }
 
         //Get:
+        [Admin_PMAuthorization]
         public ActionResult AssignUser(int id)
         {
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             // 1. Setup a MultiSelectList to display all the Projects in our system
             var UsersOnProject = projectHelper.UsersOnProject(id);
@@ -129,20 +126,23 @@ namespace BugTracker.Controllers
 
                 foreach (var user in UsersOnProject)
                 {
-                    if(!rolesHelper.IsUserInRole(user.Id,"Project Manager"))
-                    projectHelper.RemoveUserFromProject(user.Id, project.Id);
+                    if (!rolesHelper.IsUserInRole(user.Id, "Project Manager"))
+                        projectHelper.RemoveUserFromProject(user.Id, project.Id);
                 }
-
-                foreach (var devId in Devs)
+                if (Devs != null)
+                { 
+                      foreach (var devId in Devs)
+                      {
+                          projectHelper.AddUserToProject(devId, project.Id);
+                      }
+                }
+                if (Subs != null)
                 {
-                    projectHelper.AddUserToProject(devId, project.Id);
+                    foreach (var subId in Subs)
+                    {
+                        projectHelper.AddUserToProject(subId, project.Id);
+                    }
                 }
-
-                foreach (var subId in Subs)
-                {
-                    projectHelper.AddUserToProject(subId, project.Id);
-                }
-
                 return RedirectToAction("Details", "Projects", new { Id = project.Id });
             }
             return View();
@@ -150,12 +150,13 @@ namespace BugTracker.Controllers
 
 
         // GET: Admin
+        [AdminAuthorization]
         public ActionResult AssignPMs(int id)
         {
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
 
             // 1. Setup a MultiSelectList to display all the Projects in our system
@@ -174,7 +175,7 @@ namespace BugTracker.Controllers
         //Post:
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AssignPMs([Bind(Include = "Id,ProjectId")] Project project, List<string> PMs)
+        public ActionResult AssignPMs([Bind(Include = "Id,Name")] Project project, List<string> PMs)
         {
             if (ModelState.IsValid)
             {
@@ -187,12 +188,13 @@ namespace BugTracker.Controllers
                     if (!rolesHelper.IsUserInRole(user.Id, "Submitter") && !rolesHelper.IsUserInRole(user.Id, "Developer"))
                         projectHelper.RemoveUserFromProject(user.Id, project.Id);
                 }
-
-                foreach (var PM in PMs)
+                if (PMs != null)
                 {
-                    projectHelper.AddUserToProject(PM, project.Id);
+                    foreach (var PM in PMs)
+                    {
+                        projectHelper.AddUserToProject(PM, project.Id);
+                    }
                 }
-
                 return RedirectToAction("Details", "Projects", new { Id = project.Id });
 
             }
@@ -200,12 +202,13 @@ namespace BugTracker.Controllers
         }
 
         //Get:
+        [Admin_PMAuthorization]
         public ActionResult AssignSubmitter(int id)
         {
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             // 1. Setup a MultiSelectList to display all the Projects in our system
             var UsersOnProject = projectHelper.UsersOnProject(id);
@@ -240,30 +243,32 @@ namespace BugTracker.Controllers
                     if (!rolesHelper.IsUserInRole(user.Id, "Project Manager") && !rolesHelper.IsUserInRole(user.Id, "Developer"))
                         projectHelper.RemoveUserFromProject(user.Id, project.Id);
                 }
-
-                foreach (var subId in Subs)
+                if (Subs != null)
                 {
-                    projectHelper.AddUserToProject(subId, project.Id);
+                    foreach (var subId in Subs)
+                    {
+                        projectHelper.AddUserToProject(subId, project.Id);
+                    }
                 }
-
                 return RedirectToAction("Details", "Projects", new { Id = project.Id });
             }
             return View();
         }
 
         //Get:
+        [Admin_PMAuthorization]
         public ActionResult AssignDeveloper(int id)
         {
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             // 1. Setup a MultiSelectList to display all the Projects in our system
             var UsersOnProject = projectHelper.UsersOnProject(id);
             var projDevs = new List<string>();
             var projSubs = new List<string>();
-
+           
             foreach (var devUser in UsersOnProject)
             {
                 if (rolesHelper.IsUserInRole(devUser.Id, "Developer"))
@@ -293,12 +298,13 @@ namespace BugTracker.Controllers
                     if (!rolesHelper.IsUserInRole(user.Id, "Project Manager") && !rolesHelper.IsUserInRole(user.Id, "Submitter"))
                         projectHelper.RemoveUserFromProject(user.Id, project.Id);
                 }
-
-                foreach (var devId in Devs)
+                if (Devs != null)
                 {
-                    projectHelper.AddUserToProject(devId, project.Id);
+                    foreach (var devId in Devs)
+                    {
+                        projectHelper.AddUserToProject(devId, project.Id);
+                    }
                 }
-
                 return RedirectToAction("Details", "Projects", new { Id = project.Id });
             }
             return View();
@@ -307,6 +313,7 @@ namespace BugTracker.Controllers
 
 
         // GET: Projects/Details/5
+        [ProjectAuthorization]
         public ActionResult Details(int id)
         {
             var UsersOnProject = projectHelper.UsersOnProject(id);
@@ -317,7 +324,7 @@ namespace BugTracker.Controllers
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             foreach (var PmUser in UsersOnProject)
             {
@@ -348,7 +355,7 @@ namespace BugTracker.Controllers
             return View(project);
 
         }
-        [Authorize(Roles = ("Admin,Project Manager"))]
+        [Admin_PMAuthorization]
         // GET: Projects/Create
         public ActionResult Create()
         {
@@ -368,25 +375,25 @@ namespace BugTracker.Controllers
             {
                 db.Projects.Add(project);
                 db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
 
 
             return View(project);
         }
 
-        [Authorize(Roles = ("Admin,Project Manager"))]
+        [Admin_PMAuthorization]
         // GET: Projects/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
 
             // create a list option that will only show Open or Closed
@@ -407,24 +414,24 @@ namespace BugTracker.Controllers
             {
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View(project);
 
         }
 
-        [Authorize(Roles = ("Admin,Project Manager"))]
+        [Admin_PMAuthorization]
         // GET: Projects/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(project);
         }
@@ -437,7 +444,7 @@ namespace BugTracker.Controllers
             Project project = db.Projects.Find(id);
             db.Projects.Remove(project);
             db.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         protected override void Dispose(bool disposing)

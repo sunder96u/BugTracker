@@ -7,12 +7,98 @@
 @{
     ViewBag.Title = "Index";
 }
-
+@{var user = User.Identity.GetUserId();}
 
 <div class="container-fluid">
     <!-- widget grid -->
     <section id="widget-grid" class="">
         <!-- row -->
+        @if (User.IsInRole("Demo"))
+        {
+        <div class="row">
+            <!-- NEW WIDGET START -->
+            <article class="col-sm-12 col-md-12 col-lg-12">
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget jarviswidget-color-blueDark" id="About" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-question"></i> </span>
+                        <h2>About Role</h2>
+                    </header>
+                    <!-- widget div
+                    <div>
+                        <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+                    </div>
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body">
+                        <form class="form-horizontal">
+                            <fieldset>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                <legend>Administrator Roles</legend>
+                                <div class="form-group well">
+                                    <p>The Administrator is the only person with permission to assign Roles to Users, <br/>
+                                        They are about to view all Project and Tickets, <br/>
+                                        They are able to Create new Projects, <br/>
+                                        They are able to Edit Project Details, <br/>
+                                        They are able to Assign Users to Projects, <br/>
+                                        They are able to Assing Users to Tickets, <br/>
+                                        They are able to Edit Ticket Details, <br/>
+                                        They are able to Add Comments and Attachments to any Ticket
+                                    </p>
+                                </div>
+                                }
+                                @if (User.IsInRole("Project Manager"))
+                                {
+                                <legend>Project Managers Roles</legend>
+                                <div class="form-group well">
+                                    <p>
+                                        The Project Manager is able to view all Project, <br/>
+                                        They are able to Create Projects,<br/>
+                                        They are able to Edit Project Details for Projects they area assigned,<br/>
+                                        They are able to Assing Users to Projects in which they are assigned,<br/>
+                                        They are able to Assign Developers to Tickets that belong to Projects in which they are assigned,<br/>
+                                        They are able to Edit Ticket Details for Tickets that belong to Projects in which they are assigned,<br/>
+                                        They are able to Add Comments and Attachments to any Ticket that belong to Projects in which they are assigned
+                                    </p>
+                                </div>
+                                }
+                                @if (User.IsInRole("Developer"))
+                                {
+                                <legend>Developers Roles</legend>
+                                <div class="form-group well">
+                                    <p>
+                                        The Developers are able to Edit Ticket Details for which they are Assigned,<br/>
+                                        They are able to add Comments and Attachments to Tickets they are Assigned,<br/>
+                                        They are able to Update the Status of the Ticket they are working on to properly reflect current Ticket Status,<br/>
+                                        They are only able to view Ticket History and Notifications for Tickets in which they are Assigned
+                                    </p>
+                                </div>
+                                }
+                                @if (User.IsInRole("Submitter"))
+                                {
+                                <legend>Submitters Roles</legend>
+                                <div class="form-group well">
+                                    <p>
+                                        Submitters are the only person with permission to Create New Tickets, <br/>
+                                        They are able to Edit Ticket Details for Tickets which they Created,<br/>
+                                        They are able to Add Comments and Attachments to Tickets which they Created,<br/>
+                                        They are only able to to view Ticket History and Notifications for Tickets in which they Created
+
+                                    </p>
+                                </div>
+                                }
+                            </fieldset>
+                        </form>
+                    </div>
+                    <!-- end widget content -->
+                </div>
+                <!-- end widget div -->
+            </article>
+        </div>
+        }
         <div class="row">
             <div class="col-md-6">
                 @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
@@ -340,7 +426,7 @@
                                                                             </label>
                                                                         </span>
                                                                         <p>
-                                                                            <strong>@item.Title</strong>  (@item.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item.ProjectId, @Style = "color:black;"})">@item.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item.Id })" class="FontBig">More Details</a>]
+                                                                            <strong>@item.Title</strong>  (@item.TicketType.Name)| @item.TicketStatus.Name | <strong><a href="@Url.Action("Details", "Projects", new { id = item.ProjectId, @Style = "color:black;"})">@item.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item.Id })" class="FontBig">More Details</a>]
                                                                             <span class="date">@Created[0]</span>
                                                                         </p>
                                                                     </li>
@@ -378,7 +464,7 @@
                                                                             </label>
                                                                         </span>
                                                                         <p>
-                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | @item1.TicketStatus.Name | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
                                                                             <span class="date">@Created[0]</span>
                                                                         </p>
                                                                     </li>
@@ -416,7 +502,7 @@
                                                                             </label>
                                                                         </span>
                                                                         <p>
-                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | @item1.TicketStatus.Name | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
                                                                             <span class="date">@Created[0]</span>
                                                                         </p>
                                                                     </li>
@@ -454,7 +540,7 @@
                                                                             </label>
                                                                         </span>
                                                                         <p>
-                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | @item1.TicketStatus.Name | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
                                                                             <span class="date">@Created[0]</span>
                                                                         </p>
                                                                     </li>
@@ -492,7 +578,7 @@
                                                                             </label>
                                                                         </span>
                                                                         <p>
-                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | @item1.TicketStatus.Name | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
                                                                             <span class="date">@Created[0]</span>
                                                                         </p>
                                                                     </li>
@@ -530,7 +616,7 @@
                                                                             </label>
                                                                         </span>
                                                                         <p>
-                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
+                                                                            <strong>@item1.Title</strong> (@item1.TicketType.Name) | @item1.TicketStatus.Name | <strong><a href="@Url.Action("Details", "Projects", new { id = item1.ProjectId, Style = "color:FFF;"})">@item1.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item1.Id })" class="FontBig">More Details</a>]
                                                                             <span class="date">@Created[0]</span>
                                                                         </p>
                                                                     </li>
@@ -1098,7 +1184,96 @@
                                                                 <div class="well">
                                                                     @if (item.FilePath != null)
                                                                     {
-                                                                        <a class="btn bg-color-darken txt-color-white" href="@item.FilePath" download="@item.FilePath.ToString().Split('/')[2]">@item.FilePath.ToString().Split('/')[2]</a>
+                                                                        // I will need to make this button active for the File path of the attachment.
+                                                                        // I would like some sort of pop up that will allow the user to view the file to appear
+                                                                        var icon = Path.GetExtension(item.FilePath);
+
+                                                                        <table>
+                                                                            <thead>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <a class="btn bg-color-darken txt-color-white" href="@item.FilePath" download="@item.FilePath.ToString().Split('/')[2]">@item.FilePath.ToString().Split('/')[2]</a>
+                                                                                    </td>
+                                                                                    <td style="min-width:20px;">
+                                                                                        @if (icon == ".ai")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/ai.png" alt="ai file" />
+                                                                                        }
+                                                                                        @if (icon == ".bmp")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/bmp.png" alt="bmp file" />
+                                                                                        }
+                                                                                        @if (icon == ".doc")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/doc.png" alt="doc file" />
+                                                                                        }
+                                                                                        @if (icon == ".docx")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/docx.png" alt="docx file" />
+                                                                                        }
+                                                                                        @if (icon == ".docx")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/docx.png" alt="docx file" />
+                                                                                        }
+                                                                                        @if (icon == ".gif")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/gif.png" alt="gif file" />
+                                                                                        }
+                                                                                        @if (icon == ".jpg")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/jpg.png" alt="jpg file" />
+                                                                                        }
+                                                                                        @if (icon == ".ods")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/ods.png" alt="ods file" />
+                                                                                        }
+                                                                                        @if (icon == ".pdf")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/pdf.png" alt="pdf file" />
+                                                                                        }
+                                                                                        @if (icon == ".png")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/png.png" alt="png file" />
+                                                                                        }
+                                                                                        @if (icon == ".PNG")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/png.png" alt="png file" />
+                                                                                        }
+                                                                                        @if (icon == ".pps")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/pps.png" alt="pps file" />
+                                                                                        }
+                                                                                        @if (icon == ".ppt")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/ppt.png" alt="ppt file" />
+                                                                                        }
+                                                                                        @if (icon == ".rar")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/rar.png" alt="rar file" />
+                                                                                        }
+                                                                                        @if (icon == ".rtf")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/rtf.png" alt="rtf file" />
+                                                                                        }
+                                                                                        @if (icon == ".xls")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/xls.png" alt="xls file" />
+                                                                                        }
+                                                                                        @if (icon == ".xlsx")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/xlsx.png" alt="xlsx file" />
+                                                                                        }
+                                                                                        @if (icon == ".zip")
+                                                                                        {
+                                                                                            <img class="img-responsive smlimage" src="~/Images/zip.png" alt="zip file" />
+                                                                                        }
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                        @*<a class="btn bg-color-darken txt-color-white" href="@attach.FilePath" download="@attach.FilePath.ToString().Split('/')[2]">@attach.FilePath.ToString().Split('/')[2]</a>*@
                                                                         <br />
                                                                         <img class="img-responsive" src="@item.FilePath" alt="" height="400" width="400" />
                                                                         <br />

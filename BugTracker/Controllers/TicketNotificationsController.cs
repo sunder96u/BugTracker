@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Action_Filters;
 using BugTracker.Models;
 
 namespace BugTracker.Controllers
@@ -17,6 +18,7 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TicketNotifications
+        [AdminAuthorization]
         public ActionResult Index()
         {
             var ticketNotifications = db.TicketNotifications.Include(t => t.Ticket);
@@ -28,12 +30,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketNotification ticketNotification = db.TicketNotifications.Find(id);
             if (ticketNotification == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketNotification);
         }
@@ -64,16 +66,17 @@ namespace BugTracker.Controllers
         }
 
         // GET: TicketNotifications/Edit/5
+        [AdminAuthorization]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketNotification ticketNotification = db.TicketNotifications.Find(id);
             if (ticketNotification == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketNotification.TicketId);
             return View(ticketNotification);
@@ -97,16 +100,17 @@ namespace BugTracker.Controllers
         }
 
         // GET: TicketNotifications/Delete/5
+        [AdminAuthorization]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketNotification ticketNotification = db.TicketNotifications.Find(id);
             if (ticketNotification == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketNotification);
         }

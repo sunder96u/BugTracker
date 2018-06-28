@@ -1,4 +1,5 @@
-﻿using BugTracker.Helpers;
+﻿using BugTracker.Action_Filters;
+using BugTracker.Helpers;
 using BugTracker.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Web.Mvc;
 
 namespace BugTracker.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [AdminAuthorization]
     [RequireHttps]
     public class AdminController : Controller
     {

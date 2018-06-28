@@ -6,11 +6,12 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Action_Filters;
 using BugTracker.Models;
 
 namespace BugTracker.Controllers
 {
-    [Authorize]
+    [AdminAuthorization]
     [RequireHttps]
     public class TicketStatusesController : Controller
     {
@@ -27,12 +28,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketStatus ticketStatus = db.TicketStatuses.Find(id);
             if (ticketStatus == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketStatus);
         }
@@ -65,12 +66,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketStatus ticketStatus = db.TicketStatuses.Find(id);
             if (ticketStatus == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketStatus);
         }
@@ -96,12 +97,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketStatus ticketStatus = db.TicketStatuses.Find(id);
             if (ticketStatus == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketStatus);
         }

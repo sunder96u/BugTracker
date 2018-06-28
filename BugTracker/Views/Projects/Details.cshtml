@@ -5,10 +5,6 @@
     ViewBag.Title = "Details";
 }
 
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "MyProjects")
-</p>
 @{
     var tickethelper = new TicketHelper();
     var projhelper = new ProjectHelper();
@@ -304,16 +300,16 @@
                                         <td>
                                             @if (item.Updated != null)
                                             {
-                                             var updated = item.Updated.ToString().Split(' '); 
+                                                var updated = item.Updated.ToString().Split(' ');
 
-                                            @updated[0] @updated[1] @updated[2]
+                                                @updated[0] @updated[1] @updated[2]
                                             }
                                             @if (item.Updated == null)
                                             {
                                                 @Html.DisplayFor(ModelItem => item.Updated)
                                             }
                                         </td>
-                                        
+
                                         <td>
                                             @if (item.AssignedToUserId != null)
                                             {
@@ -388,27 +384,30 @@
                 phone: 480
             };
 
-            $('#dt_basic').dataTable({
-                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
-                    "t" +
-                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-                "autoWidth": true,
-                "oLanguage": {
-                    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
-                },
-                "preDrawCallback": function () {
-                    // Initialize the responsive datatables helper once.
-                    if (!responsiveHelper_dt_basic) {
-                        responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_basic'), breakpointDefinition);
-                    }
-                },
-                "rowCallback": function (nRow) {
-                    responsiveHelper_dt_basic.createExpandIcon(nRow);
-                },
-                "drawCallback": function (oSettings) {
-                    responsiveHelper_dt_basic.respond();
-                }
-            });
+            //$('.table').dataTable({
+            //    "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+            //        "t" +
+            //        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+            //    "autoWidth": true,
+            //    "oLanguage": {
+            //        "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+            //    },
+            //    "preDrawCallback": function () {
+            //        // Initialize the responsive datatables helper once.
+            //        if (!responsiveHelper_dt_basic) {
+            //            responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('.table'), breakpointDefinition);
+            //        }
+            //    },
+            //    "rowCallback": function (nRow) {
+            //        responsiveHelper_dt_basic.createExpandIcon(nRow);
+            //    },
+            //    "drawCallback": function (oSettings) {
+            //        responsiveHelper_dt_basic.respond();
+            //    }
+            //});
+
+
+            $('.table').dataTable();
 
             /* END BASIC */
 

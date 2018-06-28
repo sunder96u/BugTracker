@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Action_Filters;
 using BugTracker.Helpers;
 using BugTracker.Models;
 using BugTracker.Views;
@@ -22,6 +23,7 @@ namespace BugTracker.Controllers
         private ProjectHelper projectHelper = new ProjectHelper();
 
         // GET: Users
+        [AdminAuthorization]
         public ActionResult Index()
         {
     
@@ -62,16 +64,16 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             ApplicationUser applicationUser = db.Users.Find(id);
             if (applicationUser == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(applicationUser);
         }
-        [Authorize(Roles = "Admin")]
+        [AdminAuthorization]
         // GET: Users/Create
         public ActionResult Create()
         {
@@ -102,23 +104,23 @@ namespace BugTracker.Controllers
 
             return View(applicationUser);
         }
-        [Authorize(Roles = "Admin,Project Manager")]
+        [Admin_PMAuthorization]
         // GET: Users/Edit/5
         public ActionResult Edit(string id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             ApplicationUser applicationUser = db.Users.Find(id);
             if (applicationUser == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
 
             // Setup A selectlist for the users to select
             var occupiedRoles = rolesHelper.ListUserRoles(id).FirstOrDefault();
-            ViewBag.Roles = new SelectList(db.Roles, "Name", "Name", occupiedRoles);
+            ViewBag.Roles = new MultiSelectList(db.Roles, "Name", "Name", occupiedRoles);
 
             var myProjectIds = new List<int>();
             var myProjects = projectHelper.ListUserProjects(id);
@@ -183,12 +185,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             ApplicationUser applicationUser = db.Users.Find(id);
             if (applicationUser == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
 
             return View(applicationUser);
@@ -225,12 +227,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             ApplicationUser applicationUser = db.Users.Find(id);
             if (applicationUser == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
 
             return View(applicationUser);
@@ -266,18 +268,18 @@ namespace BugTracker.Controllers
             }
             return View(applicationUser);
         }
-        [Authorize(Roles = "Admin")]
+        [AdminAuthorization]
         // GET: Users/Delete/5
         public ActionResult Delete(string id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             ApplicationUser applicationUser = db.Users.Find(id);
             if (applicationUser == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(applicationUser);
         }

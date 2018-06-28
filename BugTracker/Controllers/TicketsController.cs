@@ -26,6 +26,7 @@ namespace BugTracker.Controllers
 
 
         // GET: Tickets
+        [Admin_PMAuthorization]
         public ActionResult Index()
         {
             {
@@ -47,6 +48,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Details/5
+        [TicketFinder]
         public ActionResult Details(int id)
         {
 
@@ -59,7 +61,7 @@ namespace BugTracker.Controllers
 
             if (Ticket == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops4", "Home", null);
             }
 
             foreach (var PmUser in UsersOnProject)
@@ -70,11 +72,12 @@ namespace BugTracker.Controllers
 
             var ProjectManager = projPMs.ToList();
             ViewBag.Pms = new SelectList(ProjectManager, "Id", "DisplayName", projPMs);
-            ViewBag.TicketStatusId = new SelectList(db.TicketStatuses.Where(t => t.Name != "Unassigned" && t.Name != "Closed"), "Id", "Name", Ticket.TicketStatusId);
+            ViewBag.TicketStatusId = new SelectList(db.TicketStatuses.Where(t => t.Name != "Unassigned" && t.Name !="Closed"), "Id", "Name", Ticket.TicketStatusId);
+
 
             return View(Ticket);
         }
-        [Authorize(Roles = "Submitter")]
+        [SubmitterAuthorization]
         // GET: Tickets/Create
         public ActionResult Create()
         {
@@ -101,7 +104,7 @@ namespace BugTracker.Controllers
                 ticket.Created = DateTimeOffset.Now;
                 db.Tickets.Add(ticket);
                 db.SaveChanges();
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index","Dashboard");
             }
 
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
@@ -117,18 +120,19 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             Ticket ticket = db.Tickets.Find(id);
             if (ticket == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
             ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName", ticket.OwnerUserId);
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+            ViewBag.TicketStatusPM = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
         }
@@ -197,11 +201,81 @@ namespace BugTracker.Controllers
                 return RedirectToAction("Details", "Tickets", new { Id = ticket.Id });
             }
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+            ViewBag.TicketStatusPM = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+
+            return View(ticket);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CloseStatus([Bind(Include = "Id,TicketStatusId,Updated,Title,Description")] Ticket ticket)
+        {
+
+            var oldTicket = db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
+
+            if (ModelState.IsValid)
+            {
+                ticket.Updated = DateTimeOffset.Now;
+                ticket.Title = "foo";
+                ticket.Description = "foo";
+                
+                if (ticket.TicketStatusId == 5)
+                {
+                    ticket.TicketStatusId = 6;
+                }
+                db.Tickets.Attach(ticket);
+                db.Entry(ticket).Property(p => p.Updated).IsModified = true;
+                db.Entry(ticket).Property(p => p.TicketStatusId).IsModified = true;
+                db.Entry(ticket).Property(p => p.Description).IsModified = false;
+                db.Entry(ticket).Property(p => p.Title).IsModified = false;
+                db.SaveChanges();
+
+                ticket.Status1Changes(oldTicket);
+
+                return RedirectToAction("Details", "Tickets", new { Id = ticket.Id });
+            }
+            ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+            ViewBag.TicketStatusPM = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+
+            return View(ticket);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReopenStatus([Bind(Include = "Id,TicketStatusId,Updated,Title,Description")] Ticket ticket)
+        {
+
+            var oldTicket = db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
+
+            if (ModelState.IsValid)
+            {
+                ticket.Updated = DateTimeOffset.Now;
+                ticket.Title = "foo";
+                ticket.Description = "foo";
+
+                if (ticket.TicketStatusId == 6)
+                {
+                    ticket.TicketStatusId = 2;
+                }
+                db.Tickets.Attach(ticket);
+                db.Entry(ticket).Property(p => p.Updated).IsModified = true;
+                db.Entry(ticket).Property(p => p.TicketStatusId).IsModified = true;
+                db.Entry(ticket).Property(p => p.Description).IsModified = false;
+                db.Entry(ticket).Property(p => p.Title).IsModified = false;
+                db.SaveChanges();
+
+                ticket.Status2Changes(oldTicket);
+
+                return RedirectToAction("Details", "Tickets", new { Id = ticket.Id });
+            }
+            ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+            ViewBag.TicketStatusPM = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
 
             return View(ticket);
         }
 
         // GET: Tickets/Edit/5
+        [Admin_PMAuthorization]
         public ActionResult AssignDev(int id)
         {
 
@@ -215,7 +289,7 @@ namespace BugTracker.Controllers
 
             if (ticket == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             foreach (var devUser in UsersOnProject)
             {
@@ -274,16 +348,17 @@ namespace BugTracker.Controllers
             return View(ticket);
         }
         // GET: Tickets/Delete/5
+        [AdminAuthorization]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             Ticket ticket = db.Tickets.Find(id);
             if (ticket == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticket);
         }

@@ -198,7 +198,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\AllowedFileTypesController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -262,19 +261,30 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Images\jpg.png" />
+    <Content Include="Images\Adobe.png" />
+    <Content Include="Images\ai.png" />
     <Content Include="Images\Background_Bug_Tracker.jpg" />
+    <Content Include="Images\bmp.png" />
+    <Content Include="Images\doc.png" />
+    <Content Include="Images\docx.png" />
+    <Content Include="Images\gif.png" />
+    <Content Include="Images\jpg.png" />
     <Content Include="Images\ms-icon-310x310.png" />
-    <Content Include="Images\Pdf.png" />
-    <Content Include="Images\png.jpg" />
-    <Content Include="Images\txt-512.png" />
+    <Content Include="Images\ods.png" />
+    <Content Include="Images\pdf.png" />
+    <Content Include="Images\png.png" />
+    <Content Include="Images\pps.png" />
+    <Content Include="Images\ppt.png" />
+    <Content Include="Images\rar.png" />
+    <Content Include="Images\rtf.png" />
+    <Content Include="Images\xls.png" />
+    <Content Include="Images\xlsx.png" />
+    <Content Include="Images\zip.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\.docx" />
-    <Content Include="Images\.xls" />
     <Content Include="Content\sweetalert\sweet-alert.less" />
     <Content Include="Content\sweetalert\sweet-alert-combine.less" />
     <Content Include="Content\sweetalert\sweet-alert-animations.less" />
@@ -1017,7 +1027,6 @@
     <Content Include="Views\Projects\Delete.cshtml" />
     <Content Include="Views\Projects\Details.cshtml" />
     <Content Include="Views\Projects\Edit.cshtml" />
-    <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Tickets\Create.cshtml" />
     <Content Include="Views\Tickets\Delete.cshtml" />
     <Content Include="Views\Tickets\Details.cshtml" />
@@ -1139,6 +1148,11 @@
     <Content Include="Views\Projects\AssignDeveloper.cshtml" />
     <Content Include="Views\Projects\AssignPMs.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Home\Error404.cshtml" />
+    <Content Include="Views\Home\Error500.cshtml" />
+    <Content Include="Views\Home\Oops4.cshtml" />
+    <Content Include="Views\Shared\_shortcut.cshtml" />
+    <Content Include="Views\Shared\_Shortcut2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -211,7 +211,155 @@ namespace BugTracker.Extension_Methods
             }
         }
 
+        public static void Status1Changes(this Ticket ticket, Ticket oldTicket)
+        {
+            //retrieve the tracked properties from the web config file
+            var propertyList = WebConfigurationManager.AppSettings["StatusChange"];
+
+            //Iterate over the properties of the Ticket Type
+            foreach (PropertyInfo prop in ticket.GetType().GetProperties())
+            {
+                //if (!propertyList.Contains(prop.Name))
+                //    continue;
+                if (propertyList != prop.Name)
+                    continue;
+
+                var value = prop.GetValue(ticket, null) ?? "";
+                var oldValue = prop.GetValue(oldTicket, null) ?? "";
+
+                if (value.ToString() != oldValue.ToString())
+                {
+                    var ticketHistory = new TicketHistory
+                    {
+                        Changed = DateTime.Now,
+                        Property = prop.Name,
+                        NewValue = Status1ChangeKey(prop.Name, value),
+                        OldValue = Status1ChangeKey(prop.Name, oldValue),
+                        TicketId = ticket.Id,
+                        UserId = HttpContext.Current.User.Identity.GetUserId()
+                    };
+
+                    db.TicketHistories.Add(ticketHistory);
+                }
+                var newClose = (ticket.Id == ticket.Id);
+
+                var body = new StringBuilder();
+                body.AppendLine("<br/><p><u><b>Message:</b></u></p>");
+                body.AppendFormat("<p><b>A Change has been made to your Ticket:</b> {0}</p>", oldTicket.Title);
+                body.AppendFormat("<p><b>The Ticket has been closed</b><p>");
+
+
+                TicketNotification notification = null;
+                if (newClose)
+                {
+                    notification = new TicketNotification
+                    {
+                        Body = body.ToString(),
+                        Created = DateTimeOffset.Now,
+                        RecieverId = ticket.AssignedToUserId,
+                        TicketId = ticket.Id
+                    };
+                    db.TicketNotifications.Add(notification);
+                }
+
+                db.SaveChanges();
+            }
+        }
+
+        public static void Status2Changes(this Ticket ticket, Ticket oldTicket)
+        {
+            //retrieve the tracked properties from the web config file
+            var propertyList = WebConfigurationManager.AppSettings["StatusChange"];
+
+            //Iterate over the properties of the Ticket Type
+            foreach (PropertyInfo prop in ticket.GetType().GetProperties())
+            {
+                //if (!propertyList.Contains(prop.Name))
+                //    continue;
+                if (propertyList != prop.Name)
+                    continue;
+
+                var value = prop.GetValue(ticket, null) ?? "";
+                var oldValue = prop.GetValue(oldTicket, null) ?? "";
+
+                if (value.ToString() != oldValue.ToString())
+                {
+                    var ticketHistory = new TicketHistory
+                    {
+                        Changed = DateTime.Now,
+                        Property = prop.Name,
+                        NewValue = Status2ChangeKey(prop.Name, value),
+                        OldValue = Status2ChangeKey(prop.Name, oldValue),
+                        TicketId = ticket.Id,
+                        UserId = HttpContext.Current.User.Identity.GetUserId()
+                    };
+
+                    db.TicketHistories.Add(ticketHistory);
+                }
+                var newClose = (ticket.Id == ticket.Id);
+
+                var body = new StringBuilder();
+                body.AppendLine("<br/><p><u><b>Message:</b></u></p>");
+                body.AppendFormat("<p><b>A Change has been made to your Ticket:</b> {0}</p>", oldTicket.Title);
+                body.AppendFormat("<p><b>The Ticket has been Reopenned</b><p>");
+
+
+                TicketNotification notification = null;
+                if (newClose)
+                {
+                    notification = new TicketNotification
+                    {
+                        Body = body.ToString(),
+                        Created = DateTimeOffset.Now,
+                        RecieverId = ticket.AssignedToUserId,
+                        TicketId = ticket.Id
+                    };
+                    db.TicketNotifications.Add(notification);
+                }
+
+                db.SaveChanges();
+            }
+        }
+
         private static string StatusChangeKey(string keyName, object key)
+        {
+            var returnValue = "";
+            if (key.ToString() == string.Empty)
+                return returnValue;
+
+            switch (keyName)
+            {
+                case "TicketStatusId":
+                    returnValue = db.TicketStatuses.Find(key).Name;
+                    break;
+
+                default:
+                    returnValue = key.ToString();
+                    break;
+            }
+            return returnValue;
+        }
+
+        private static string Status1ChangeKey(string keyName, object key)
+        {
+            var returnValue = "";
+            if (key.ToString() == string.Empty)
+                return returnValue;
+
+            switch (keyName)
+            {
+                case "TicketStatusId":
+                    returnValue = db.TicketStatuses.Find(key).Name;
+                    break;
+
+                default:
+                    returnValue = key.ToString();
+                    break;
+            }
+            return returnValue;
+        }
+
+        private static string Status2ChangeKey(string keyName, object key)
         {
             var returnValue = "";
             if (key.ToString() == string.Empty)
@@ -352,7 +500,7 @@ namespace BugTracker.Extension_Methods
         {
             //create the variable for what the notifications will be sent about
             //Assignment of Developer
-            var newComment = (ticketComment.UserId != ticketComment.Ticket.AssignedToUserId);
+            var newComment = (ticketComment.TicketId == oldTicketComment.TicketId);
 
             var body = new StringBuilder();
             body.AppendLine("<br/><p><u><b>Message:</b></u></p>");
@@ -380,7 +528,7 @@ namespace BugTracker.Extension_Methods
         {
             //create the variable for what the notifications will be sent about
             //Assignment of Developer
-            var newAttachment = (ticketAttachment.UserId != ticketAttachment.Ticket.AssignedToUserId);
+            var newAttachment = (ticketAttachment.TicketId == oldTicketAttachment.TicketId);
 
             var body = new StringBuilder();
             body.AppendLine("<br/><p><u><b>Message:</b></u></p>");

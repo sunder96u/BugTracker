@@ -6,10 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Action_Filters;
 using BugTracker.Models;
 
 namespace BugTracker.Controllers
 {
+    [AdminAuthorization]
+    [RequireHttps]
     public class ProjectStatsesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -25,12 +28,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             ProjectStats projectStats = db.ProjectStatuses.Find(id);
             if (projectStats == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(projectStats);
         }
@@ -63,12 +66,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             ProjectStats projectStats = db.ProjectStatuses.Find(id);
             if (projectStats == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(projectStats);
         }
@@ -94,12 +97,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             ProjectStats projectStats = db.ProjectStatuses.Find(id);
             if (projectStats == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(projectStats);
         }

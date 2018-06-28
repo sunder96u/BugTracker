@@ -86,6 +86,22 @@ namespace BugTracker.Helpers
             return myTickets;
         }
 
+        public ICollection<Ticket> GetAllTickets(string userId)
+        {
+            var myTickets = new List<Ticket>();
+            var myRole = rolesHelper.ListUserRoles(userId).FirstOrDefault();
+            switch (myRole)
+            {
+                case ("Admin"):
+                    myTickets.AddRange(db.Tickets.ToList());
+                    break;
+                case ("Project Manager"):
+                    myTickets.AddRange(db.Tickets.ToList());
+                    break;
+            }
+            return myTickets;
+        }
+
         public ICollection<TicketAttachment> myTicketAttachments(string userId)
         {
             var attach = new List<TicketAttachment>();

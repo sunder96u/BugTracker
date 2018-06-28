@@ -78,5 +78,6 @@ namespace BugTracker.Controllers
 
             return View(data);
         }
+
     }
 }

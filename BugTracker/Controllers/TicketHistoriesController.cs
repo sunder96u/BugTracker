@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Action_Filters;
 using BugTracker.Models;
 
 namespace BugTracker.Controllers
@@ -17,6 +18,7 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TicketHistories
+        [AdminAuthorization]
         public ActionResult Index()
         {
             var ticketHistories = db.TicketHistories.Include(t => t.Ticket);
@@ -28,12 +30,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketHistory ticketHistory = db.TicketHistories.Find(id);
             if (ticketHistory == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketHistory);
         }
@@ -64,6 +66,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: TicketHistories/Edit/5
+        [AdminAuthorization]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -97,16 +100,17 @@ namespace BugTracker.Controllers
         }
 
         // GET: TicketHistories/Delete/5
+        [AdminAuthorization]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketHistory ticketHistory = db.TicketHistories.Find(id);
             if (ticketHistory == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketHistory);
         }

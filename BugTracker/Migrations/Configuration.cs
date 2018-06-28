@@ -25,9 +25,9 @@ namespace BugTracker.Migrations
                 roleManager.Create(new IdentityRole { Name = "Admin" });
             }
 
-            if (!context.Roles.Any(r => r.Name == "Administrator"))
+            if (!context.Roles.Any(r => r.Name == "Demo"))
             {
-                roleManager.Create(new IdentityRole { Name = "Administrator" });
+                roleManager.Create(new IdentityRole { Name = "Demo" });
             }
 
             if (!context.Roles.Any(r => r.Name == "Project Manager"))
@@ -59,8 +59,113 @@ namespace BugTracker.Migrations
                 }, "Abc123!");
             }
 
+            if (!context.Users.Any(u => u.Email == "Admin@Mailinator.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "Admin@Mailinator.com",
+                    Email = "Admin@Mailinator.com",
+                    FirstName = "Administrator",
+                    LastName = "Demo",
+                    DisplayName = "#DemoAdmin"
+                }, "Abc123!");
+            }
+
+            if (!context.Users.Any(u => u.Email == "ProjectManager@Mailinator.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "ProjectManager@Mailinator.com",
+                    Email = "ProjectManager@Mailinator.com",
+                    FirstName = "Project Manager",
+                    LastName = "Demo",
+                    DisplayName = "#DemoProjectManager"
+                }, "Abc123!");
+            }
+
+            if (!context.Users.Any(u => u.Email == "Developer1@Mailinator.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "Developer1@Mailinator.com",
+                    Email = "Developer1@Mailinator.com",
+                    FirstName = "Developer 1",
+                    LastName = "Demo",
+                    DisplayName = "#DemoDeveloper1"
+                }, "Abc123!");
+            }
+
+            if (!context.Users.Any(u => u.Email == "Developer2@Mailinator.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "Developer2@Mailinator.com",
+                    Email = "Developer2@MAilinator.com",
+                    FirstName = "Developer 2",
+                    LastName = "Demo",
+                    DisplayName = "#DemoDeveloper2"
+                }, "Abc123!");
+            }
+
+            if (!context.Users.Any(u => u.Email == "Developer3@Mailinator.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "Developer3@Mailinator.com",
+                    Email = "Developer3@Mailinator.com",
+                    FirstName = "Developer 3",
+                    LastName = "Demo",
+                    DisplayName = "#DemoDeveloper3"
+                }, "Abc123!");
+            }
+
+            if (!context.Users.Any(u => u.Email == "Submitter1@Mailinator.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "Submitter1@Mailinator.com",
+                    Email = "Submitter1@Mailinator.com",
+                    FirstName = "Submitter 1",
+                    LastName = "Demo",
+                    DisplayName = "#DemoSubmitter1"
+                }, "Abc123!");
+            }
+
+            if (!context.Users.Any(u => u.Email == "Submitter2@Mailinator.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "Submitter2@Mailinator.com",
+                    Email = "Submitter2@Mailinator.com",
+                    FirstName = "Submitter 2",
+                    LastName = "Demo",
+                    DisplayName = "#DemoSubmitter2"
+                }, "Abc123!");
+            }
+
             var userId = userManager.FindByEmail("Stevenunderwood2@hotmail.com").Id;
             userManager.AddToRole(userId, "Admin");
+
+            userId = userManager.FindByEmail("Admin@Mailinator.com").Id;
+            userManager.AddToRoles(userId, "Admin","Demo");
+
+            userId = userManager.FindByEmail("ProjectManager@Mailinator.com").Id;
+            userManager.AddToRoles(userId, "Project Manager","Demo");
+
+            userId = userManager.FindByEmail("Developer1@Mailinator.com").Id;
+            userManager.AddToRoles(userId, "Developer","Demo");
+
+            userId = userManager.FindByEmail("Developer2@Mailinator.com").Id;
+            userManager.AddToRoles(userId, "Developer","Demo");
+
+            userId = userManager.FindByEmail("Developer3@Mailinator.com").Id;
+            userManager.AddToRoles(userId, "Developer","Demo");
+
+            userId = userManager.FindByEmail("Submitter1@Mailinator.com").Id;
+            userManager.AddToRoles(userId, "Submitter","Demo");
+
+            userId = userManager.FindByEmail("Submitter2@Mailinator.com").Id;
+            userManager.AddToRoles(userId, "Submitter","Demo");
 
             //  This method will be called after migrating to the latest version.
 

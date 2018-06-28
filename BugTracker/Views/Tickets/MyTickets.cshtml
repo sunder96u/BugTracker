@@ -1,9 +1,7 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
 @using Microsoft.AspNet.Identity
 @using BugTracker.Helpers
-
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css" />
-
 @{
     ViewBag.Title = "MyTickets";
 }
@@ -55,43 +53,43 @@
                             </thead>
                             @foreach (var item in Model.Where(u => u.AssignedToUserId == User.Identity.GetUserId()))
                             {
-                            <tbody>
-                                <tr>
-                                    <td class="tablelink">
-                                        <a> @Html.ActionLink(item.Project.Name, "Details", "Projects", new { id = item.Id }, new { Style = "color:Black;" }) </a>
-                                    </td>
+                                <tbody>
+                                    <tr>
+                                        <td class="tablelink">
+                                            <a> @Html.ActionLink(item.Project.Name, "Details", "Projects", new { id = item.Id }, new { Style = "color:Black;" }) </a>
+                                        </td>
 
-                                    <td class="tablelink">
-                                        <a> @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, new { Style = "color:Black;" }) </a>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.TicketType.Name)
-                                    </td>
-                                    <td>
-                                        @{ var created = item.Created.ToString().Split(' ');}
-                                        @created[0] @created[1] @created[2]
-                                    </td>
-                                    <td>
-                                        @if (item.AssignedToUser == null && ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), item.ProjectId))) || (User.IsInRole("Admin"))))
-                                        {
-                                            <a> @Html.ActionLink("Assign Developer", "AssignDev", "Tickets", new { id = item.Id }, null) </a>
-                                        }
-                                        @if (item.AssignedToUser != null)
-                                        {
-                                            @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
-                                        }
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)
-                                    </td>
-                                </tr>
-                            </tbody>
+                                        <td class="tablelink">
+                                            <a> @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, new { Style = "color:Black;" }) </a>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                        </td>
+                                        <td>
+                                            @{ var created = item.Created.ToString().Split(' ');}
+                                            @created[0] @created[1] @created[2]
+                                        </td>
+                                        <td>
+                                            @if (item.AssignedToUser == null && ((User.IsInRole("Project Manager") && (projhelper.IsUserOnProject(User.Identity.GetUserId(), item.ProjectId))) || (User.IsInRole("Admin"))))
+                                            {
+                                                <a> @Html.ActionLink("Assign Developer", "AssignDev", "Tickets", new { id = item.Id }, null) </a>
+                                            }
+                                            @if (item.AssignedToUser != null)
+                                            {
+                                                @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)
+                                        </td>
+                                    </tr>
+                                </tbody>
                             }
                         </table>
                     </div>
@@ -101,15 +99,6 @@
     </div>
 </section>
 @section scripts{
-
-    <!-- BOOTSTRAP JS -->
-    <script src="~/Template/js/bootstrap/bootstrap.min.js"></script>
-
-    <!-- JARVIS WIDGETS -->
-    <script src="~/Template/js/smartwidgets/jarvis.widget.min.js"></script>
-
-    <!-- FastClick: For mobile devices -->
-    <script src="~/Template/js/plugin/fastclick/fastclick.min.js"></script>
 
     <!-- PAGE RELATED PLUGIN(S) -->
     <script src="~/Template/js/plugin/datatables/jquery.dataTables.min.js"></script>
@@ -151,27 +140,30 @@
                 phone: 480
             };
 
-            $('#dt_basic').dataTable({
-                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
-                    "t" +
-                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-                "autoWidth": true,
-                "oLanguage": {
-                    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
-                },
-                "preDrawCallback": function () {
-                    // Initialize the responsive datatables helper once.
-                    if (!responsiveHelper_dt_basic) {
-                        responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_basic'), breakpointDefinition);
-                    }
-                },
-                "rowCallback": function (nRow) {
-                    responsiveHelper_dt_basic.createExpandIcon(nRow);
-                },
-                "drawCallback": function (oSettings) {
-                    responsiveHelper_dt_basic.respond();
-                }
-            });
+            //$('.table').dataTable({
+            //    "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+            //        "t" +
+            //        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+            //    "autoWidth": true,
+            //    "oLanguage": {
+            //        "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+            //    },
+            //    "preDrawCallback": function () {
+            //        // Initialize the responsive datatables helper once.
+            //        if (!responsiveHelper_dt_basic) {
+            //            responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('.table'), breakpointDefinition);
+            //        }
+            //    },
+            //    "rowCallback": function (nRow) {
+            //        responsiveHelper_dt_basic.createExpandIcon(nRow);
+            //    },
+            //    "drawCallback": function (oSettings) {
+            //        responsiveHelper_dt_basic.respond();
+            //    }
+            //});
+
+
+            $('.table').dataTable();
 
             /* END BASIC */
 

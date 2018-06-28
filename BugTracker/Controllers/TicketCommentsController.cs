@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Action_Filters;
 using BugTracker.Extension_Methods;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
@@ -20,6 +21,7 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TicketComments
+        [AdminAuthorization]
         public ActionResult Index()
         {
             var ticketComments = db.TicketComments.Include(t => t.Ticket).Include(t => t.User);
@@ -31,12 +33,12 @@ namespace BugTracker.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketComment ticketComment = db.TicketComments.Find(id);
             if (ticketComment == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketComment);
         }
@@ -86,16 +88,17 @@ namespace BugTracker.Controllers
         }
 
         // GET: TicketComments/Edit/5
+        [AdminAuthorization]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketComment ticketComment = db.TicketComments.Find(id);
             if (ticketComment == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketComment.TicketId);
             ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketComment.UserId);
@@ -121,16 +124,17 @@ namespace BugTracker.Controllers
         }
 
         // GET: TicketComments/Delete/5
+        [AdminAuthorization]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Oops5", "Home", null);
             }
             TicketComment ticketComment = db.TicketComments.Find(id);
             if (ticketComment == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Oops5", "Home", null);
             }
             return View(ticketComment);
         }

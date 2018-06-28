@@ -64,7 +64,5 @@ namespace BugTracker.Models
         public DbSet<TicketNotification> TicketNotifications { get; set; }
         public DbSet<AllowedFileType> AllowedFileTypes { get; set; }
         public DbSet<ProjectStats> ProjectStatuses { get; set; }
-
-
     }
 }

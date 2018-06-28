@@ -64,13 +64,54 @@ namespace BugTracker.Helpers
         public ICollection<Project> myProjects(string userId)
         {
             var Projects = new List<Project>();
-            foreach (var proj in ListUserProjects(userId))
+            var myRole = rolesHelper.ListUserRoles(userId).FirstOrDefault();
+            switch(myRole)
             {
-                Projects.AddRange(db.Projects.Where(t => t.Id == proj.Id).ToList());
+                case ("Admin"):
+                    Projects.AddRange(db.Projects.ToList());
+                    break;
+                case ("Project Manager"):
+                    foreach (var proj in ListUserProjects(userId))
+                    {
+                        Projects.AddRange(db.Projects.Where(t => t.Id == proj.Id).ToList());
+                    }
+                    break;
+                case ("Developer"):
+                    foreach (var proj in ListUserProjects(userId))
+                    {
+                        Projects.AddRange(db.Projects.Where(t => t.Id == proj.Id).ToList());
+                    }
+                    break;
+                case ("Submitter"):
+                    foreach (var proj in ListUserProjects(userId))
+                    {
+                        Projects.AddRange(db.Projects.Where(t => t.Id == proj.Id).ToList());
+                    }
+                    break;
+            }
+            return Projects;
+            //foreach (var proj in ListUserProjects(userId))
+            //{
+            //    Projects.AddRange(db.Projects.Where(t => t.Id == proj.Id).ToList());
+            //}
+            //return Projects;
+        }
+
+        public ICollection<Project> allProjects(string userId)
+        {
+            var Projects = new List<Project>();
+            var myRole = rolesHelper.ListUserRoles(userId).FirstOrDefault();
+            switch(myRole)
+            {
+                case ("Admin"):
+                    Projects.AddRange(db.Projects.ToList());
+                    break;
+                case ("Project Manager"):
+                    Projects.AddRange(db.Projects.ToList());
+                    break;
             }
             return Projects;
         }
-
 
         public ICollection<ApplicationUser> UsersOnProject(int projectId)
         {

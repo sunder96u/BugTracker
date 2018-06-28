@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<BugTracker.Models.Project>
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css" />
 @{
     ViewBag.Title = "OpenProjects";
 }
@@ -27,30 +27,30 @@
                                     </th>
 
                                     @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                                    { 
+                                    {
                                         <th></th>
-                                        }
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td class="tablelink">
-                                        <a> @Html.ActionLink(item.Name, "Details", "Projects", new { id = item.Id }, new { Style = "color:Black;" })</a>
-                                    </td>
-
-
-                                    @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                                    {
-                                        <td>
-                                            <div>
-                                                @Html.ActionLink("Assign Users", "AssignUser", "Projects", new { id = item.Id }, null)
-                                            </div>
+                                    <tr>
+                                        <td class="tablelink">
+                                            <a> @Html.ActionLink(item.Name, "Details", "Projects", new { id = item.Id }, new { Style = "color:Black;" })</a>
                                         </td>
-                                    }
 
-                                </tr>
+
+                                        @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                                        {
+                                            <td>
+                                                <div>
+                                                    @Html.ActionLink("Assign Users", "AssignUser", "Projects", new { id = item.Id }, null)
+                                                </div>
+                                            </td>
+                                        }
+
+                                    </tr>
                                 }
                             </tbody>
 
@@ -62,15 +62,6 @@
     </div>
 </section>
 @section scripts{
-
-    <!-- BOOTSTRAP JS -->
-    <script src="~/Template/js/bootstrap/bootstrap.min.js"></script>
-
-    <!-- JARVIS WIDGETS -->
-    <script src="~/Template/js/smartwidgets/jarvis.widget.min.js"></script>
-
-    <!-- FastClick: For mobile devices -->
-    <script src="~/Template/js/plugin/fastclick/fastclick.min.js"></script>
 
     <!-- PAGE RELATED PLUGIN(S) -->
     <script src="~/Template/js/plugin/datatables/jquery.dataTables.min.js"></script>
@@ -112,27 +103,30 @@
                 phone: 480
             };
 
-            $('#dt_basic').dataTable({
-                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
-                    "t" +
-                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-                "autoWidth": true,
-                "oLanguage": {
-                    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
-                },
-                "preDrawCallback": function () {
-                    // Initialize the responsive datatables helper once.
-                    if (!responsiveHelper_dt_basic) {
-                        responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_basic'), breakpointDefinition);
-                    }
-                },
-                "rowCallback": function (nRow) {
-                    responsiveHelper_dt_basic.createExpandIcon(nRow);
-                },
-                "drawCallback": function (oSettings) {
-                    responsiveHelper_dt_basic.respond();
-                }
-            });
+            //$('.table').dataTable({
+            //    "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+            //        "t" +
+            //        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+            //    "autoWidth": true,
+            //    "oLanguage": {
+            //        "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+            //    },
+            //    "preDrawCallback": function () {
+            //        // Initialize the responsive datatables helper once.
+            //        if (!responsiveHelper_dt_basic) {
+            //            responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('.table'), breakpointDefinition);
+            //        }
+            //    },
+            //    "rowCallback": function (nRow) {
+            //        responsiveHelper_dt_basic.createExpandIcon(nRow);
+            //    },
+            //    "drawCallback": function (oSettings) {
+            //        responsiveHelper_dt_basic.respond();
+            //    }
+            //});
+
+
+            $('.table').dataTable();
 
             /* END BASIC */
 

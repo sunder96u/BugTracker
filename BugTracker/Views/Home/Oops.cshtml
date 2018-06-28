@@ -4,46 +4,80 @@
 
 }
 
-<div id="page-wrapper">
-    <div class="container-fluid">
-        <!--Page Heading-->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">
-                    Oops <small>Something went wrong!</small>
-                </h1>
-            </div>
+<div id="content">
+
+    <!-- row -->
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="text-center error-box">
+                        <h1 class="error-text-2 bounceInDown animated"> Something Went Wrong <span class="particle particle--c"></span><span class="particle particle--a"></span><span class="particle particle--b"></span></h1>
+                        <h2 class="font-xl"><strong><i class="fa fa-fw fa-warning fa-lg text-warning"></i> Page <u>Not</u> Found</strong></h2>
+                        <br />
+                        @if (User.IsInRole("Developer"))
+                        {
+                            <p class="lead">
+                                It appears that you are trying to Edit a ticket you are not assigned to! Use your browsers<b> Back </b>button to navigate to the page you have prevously come from
+                            </p>
+                        }
+                        @if (User.IsInRole("Submitter"))
+                        {
+                            <p class="lead">
+                                It appears that you are trying to Edit a ticket you did not create! Use your browsers<b> Back </b>button to navigate to the page you have prevously come from
+                            </p>
+                        }
+                        @if (User.IsInRole("Project Manager"))
+                        {
+                            <p class="lead">
+                                It appears that you are trying to Edit a ticket that is not on a Project you are assigned to! Use your browsers<b> Back </b>button to navigate to the page you have prevously come from
+                            </p>
+                        }
+
+                        <br>
+
+
+
+                        <div class="ifw">
+
+                            <div class="col-sm-12">
+                                <ul class="list-inline">
+                                    <li>
+                                        &nbsp;<a href=@Html.ActionLink("Dashboard","Index","Dashboard", null)</a>&nbsp;
+                                    </li>
+                                    <li>
+                                        .
+                                    </li>
+                                    <li>
+                                        &nbsp;<a href=@Html.ActionLink("My Tickets","MyTickets","Projects", null)</a>&nbsp;
+                                    </li>
+                                    <li>
+                                        .
+                                    </li>
+                                    <li>
+                                        &nbsp;<a href=@Html.ActionLink("My Projects","MyProjects","Projects", null)</a>&nbsp;
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                    </div>
+
         </div>
-        <!--/.row-->
+
     </div>
-    <!--/.container-fluid-->
-    <div class="container">
-        <div class="row">
-            @if (User.IsInRole("Developer"))
-            {
-            <h4> It appears that you are trying to Edit a ticket you are not assigned to!</h4>
-            <h4> </h4>
-            <h4> Please contact the ticket's Project Manager(s) to edit the ticket, or to get assigned to the ticket</h4>
-            }
-        </div>
-        @if (User.IsInRole("Submitter"))
-        {
-        <div class="row">
-            <h4> It appears that you are trying to Edit a ticket you did not create!</h4>
-            <h4> </h4>
-            <h4> Please contact the ticket's Project Manager(s) to edit the ticket</h4>
-        </div>
-        }
-        @if (User.IsInRole("Project Manager"))
-        {
-        <div class="row">
-            <h4> It appears that you are trying to Edit a ticket that is not on a Project you are assigned to!</h4>
-            <h4> </h4>
-            <h4> Please contact the ticket's Project Manager(s) to edit the ticket, or ask an Administrator to assign the project to you!</h4>
-        </div>
-        }
-    </div>
+
 </div>
+
+<!-- end row -->
+
+</div>
+
+</div>
+<!-- END MAIN CONTENT -->
 <!--/#page-wrapper-->
 
 @section scripts{
