@@ -31,6 +31,7 @@ namespace BugTracker.ViewModels
         public List<TicketComment> TicketsComments { get; set; }
         public List<TicketHistory> TicketsHistories { get; set; }
         public List<TicketNotification> TicketNotifications { get; set; }
+        public List<ApplicationUser> ProjUser { get; set; }
 
         public TableDashboardData()
         {
@@ -40,6 +41,7 @@ namespace BugTracker.ViewModels
             this.TicketsComments = new List<TicketComment>();
             this.TicketsHistories = new List<TicketHistory>();
             this.TicketNotifications = new List<TicketNotification>();
+            this.ProjUser = new List<ApplicationUser>();
         }
 
     }

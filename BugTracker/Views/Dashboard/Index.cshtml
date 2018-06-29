@@ -151,18 +151,18 @@
                                                                 @foreach (var item in Model.TableData.Tickets.Where(p => p.TicketStatus.Name == "Unassigned").Take(5))
                                                                 {
                                                                     var Created = item.Created.ToString().Split(' ');
-                                                                    <li>
-                                                                        <span class="handle">
-                                                                            <label class="checkbox">
-                                                                                <input type="checkbox" name="checkbox-inline">
-                                                                                <i></i>
-                                                                            </label>
-                                                                        </span>
-                                                                        <p>
-                                                                            <strong>@item.Title</strong>  (@item.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item.ProjectId, @Style = "color:black;"})">@item.Project.Name</a> </strong> [<a href="@Url.Action("Details","Tickets",new { id = item.Id })" class="FontBig">More Details</a>]
-                                                                            <span class="date">@Created[0]</span>
-                                                                        </p>
-                                                                    </li>
+                                                                <li>
+                                                                    <span class="handle">
+                                                                        <label class="checkbox">
+                                                                            <input type="checkbox" name="checkbox-inline">
+                                                                            <i></i>
+                                                                        </label>
+                                                                    </span>
+                                                                    <p>
+                                                                        <strong>@item.Title</strong>  (@item.TicketType.Name) | <strong><a href="@Url.Action("Details", "Projects", new { id = item.ProjectId, @Style = "color:black;" })">@item.Project.Name</a> </strong> [<a href="@Url.Action("Details", "Tickets", new { id = item.Id })" class="FontBig">More Details</a>]
+                                                                        <span class="date">@Created[0]</span>
+                                                                    </p>
+                                                                </li>
                                                                 }
                                                             </ul>
                                                         </div>
@@ -1183,10 +1183,10 @@
                                                                 <br />
                                                                 <div class="well">
                                                                     @if (item.FilePath != null)
-                                                                    {
-                                                                        // I will need to make this button active for the File path of the attachment.
-                                                                        // I would like some sort of pop up that will allow the user to view the file to appear
-                                                                        var icon = Path.GetExtension(item.FilePath);
+                                                                            {
+                                                                                // I will need to make this button active for the File path of the attachment.
+                                                                                // I would like some sort of pop up that will allow the user to view the file to appear
+                                                                                var icon = Path.GetExtension(item.FilePath);
 
                                                                         <table>
                                                                             <thead>
@@ -1202,71 +1202,71 @@
                                                                                             <img class="img-responsive smlimage" src="~/Images/ai.png" alt="ai file" />
                                                                                         }
                                                                                         @if (icon == ".bmp")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/bmp.png" alt="bmp file" />
                                                                                         }
                                                                                         @if (icon == ".doc")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/doc.png" alt="doc file" />
                                                                                         }
                                                                                         @if (icon == ".docx")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/docx.png" alt="docx file" />
                                                                                         }
                                                                                         @if (icon == ".docx")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/docx.png" alt="docx file" />
                                                                                         }
                                                                                         @if (icon == ".gif")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/gif.png" alt="gif file" />
                                                                                         }
                                                                                         @if (icon == ".jpg")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/jpg.png" alt="jpg file" />
                                                                                         }
                                                                                         @if (icon == ".ods")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/ods.png" alt="ods file" />
                                                                                         }
                                                                                         @if (icon == ".pdf")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/pdf.png" alt="pdf file" />
                                                                                         }
                                                                                         @if (icon == ".png")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/png.png" alt="png file" />
                                                                                         }
                                                                                         @if (icon == ".PNG")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/png.png" alt="png file" />
                                                                                         }
                                                                                         @if (icon == ".pps")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/pps.png" alt="pps file" />
                                                                                         }
                                                                                         @if (icon == ".ppt")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/ppt.png" alt="ppt file" />
                                                                                         }
                                                                                         @if (icon == ".rar")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/rar.png" alt="rar file" />
                                                                                         }
                                                                                         @if (icon == ".rtf")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/rtf.png" alt="rtf file" />
                                                                                         }
                                                                                         @if (icon == ".xls")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/xls.png" alt="xls file" />
                                                                                         }
                                                                                         @if (icon == ".xlsx")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/xlsx.png" alt="xlsx file" />
                                                                                         }
                                                                                         @if (icon == ".zip")
-                                                                                        {
+                                                                            {
                                                                                             <img class="img-responsive smlimage" src="~/Images/zip.png" alt="zip file" />
                                                                                         }
                                                                                     </td>

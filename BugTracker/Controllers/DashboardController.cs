@@ -30,6 +30,10 @@ namespace BugTracker.Controllers
             var myTicketComments = ticketHelper.myTicketComments(User.Identity.GetUserId());
 
 
+            var projman = new List<ApplicationUser>();
+            
+
+
             //Load up all the TableData
             data.TableData.Projects = db.Projects.OrderByDescending(t => t.Id).ToList();
             data.TableData.Tickets = myTickets.OrderByDescending(t => t.Created).ToList();
@@ -37,6 +41,7 @@ namespace BugTracker.Controllers
             data.TableData.TicketNotifications = myTicketNotifications.OrderByDescending(t => t.Created).ToList();
             data.TableData.TicketsComments = myTicketComments.OrderByDescending(t => t.Created).ToList();
             data.TableData.TicketsHistories = myTicketHistory.OrderByDescending(t => t.Changed).ToList();
+            data.TableData.ProjUser = projman.ToList();
 
             //data.TableData.Tickets = db.Tickets.Where(t => t.Tickets == myTickets).OrderByDescending(t => t.Created).ToList();
 
