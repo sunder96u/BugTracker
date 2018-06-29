@@ -77,7 +77,7 @@ namespace BugTracker.Controllers
                 ticketComment.CommentAdded(oldTicketComment);
 
                 var id = db.Tickets.Find(ticketComment.TicketId).Id;
-                return RedirectToAction("Details", "Tickets", new { Id = id });
+                return RedirectToAction("Details", "Tickets", new { Id = ticketComment.TicketId });
 
 
             }

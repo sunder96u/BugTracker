@@ -500,12 +500,14 @@ namespace BugTracker.Extension_Methods
         {
             //create the variable for what the notifications will be sent about
             //Assignment of Developer
-            var newComment = (ticketComment.TicketId == oldTicketComment.TicketId);
+            var newComment = (ticketComment.TicketId == ticketComment.TicketId);
+            var time = ticketComment.Created.ToString().Split(' ');
+
 
             var body = new StringBuilder();
             body.AppendLine("<br/><p><u><b>Message:</b></u></p>");
             body.AppendFormat("<p><b>A comment has been added to your Ticket:</b> {0}</p>", ticketComment.Ticket.Title);
-            body.AppendFormat("<p><b>Created by:</b> {0} on {1}</p>", ticketComment.User.DisplayName , ticketComment.Created);
+            body.AppendFormat("<p><b>Created by:</b> {0} on {1} @ {2} {3}</p>", ticketComment.User.DisplayName , time[0], time[1], time[2]);
             body.AppendFormat("<p><b>Comment:</b> {0}</p>", ticketComment.CommentBody);
 
             TicketNotification notification = null;
@@ -528,12 +530,15 @@ namespace BugTracker.Extension_Methods
         {
             //create the variable for what the notifications will be sent about
             //Assignment of Developer
-            var newAttachment = (ticketAttachment.TicketId == oldTicketAttachment.TicketId);
+
+                var newAttachment = (ticketAttachment.TicketId == ticketAttachment.TicketId);
+            var time = ticketAttachment.Created.ToString().Split(' ');
+
 
             var body = new StringBuilder();
             body.AppendLine("<br/><p><u><b>Message:</b></u></p>");
             body.AppendFormat("<p><b>An Attachment has been added to your Ticket:</b> {0}</p>", ticketAttachment.Ticket.Title);
-            body.AppendFormat("<p><b>Created by:</b> {0} on {1}</p>", ticketAttachment.User.DisplayName, ticketAttachment.Created);
+            body.AppendFormat("<p><b>Created by:</b> {0} on {1} @ {2} {3}</p>", ticketAttachment.User.DisplayName, time[0], time[1], time[2]);
             body.AppendFormat("<p><b>Attachment Description:</b> {0}</p>", ticketAttachment.Description);
 
             TicketNotification notification = null;

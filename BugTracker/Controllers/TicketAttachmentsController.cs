@@ -83,9 +83,7 @@ namespace BugTracker.Controllers
 
                 ticketAttachment.AttachmentAdded( oldTicketAttachment);
 
-
-                var id = db.Tickets.Find(ticketAttachment.TicketId).Id;
-                return RedirectToAction("Details", "Tickets", new { Id = id });
+                return RedirectToAction("Details", "Tickets", new { Id = ticketAttachment.TicketId });
                
             }
             //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketAttachment.TicketId);
